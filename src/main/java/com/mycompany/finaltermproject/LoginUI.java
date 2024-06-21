@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.finaltermproject;
-
+// Ga
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
