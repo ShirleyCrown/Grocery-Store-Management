@@ -13,6 +13,7 @@ public class incomrpUI extends javax.swing.JFrame {
     /**
      * Creates new form incomrpUI
      */
+    /* */
     public incomrpUI() {
         initComponents();
     }
