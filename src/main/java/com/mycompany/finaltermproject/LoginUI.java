@@ -222,7 +222,7 @@ public class LoginUI extends javax.swing.JFrame {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
             java.sql.Statement st = con.createStatement();
 
-            String sql = "SELECT* FROM LOGIN";
+            String sql = "SELECT* FROM ACCOUNT";
             ResultSet rs = st.executeQuery(sql);
             boolean check = false;
             while (rs.next()) {
