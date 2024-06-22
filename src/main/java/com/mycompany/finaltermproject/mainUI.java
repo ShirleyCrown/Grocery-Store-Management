@@ -329,6 +329,7 @@ public class mainUI extends javax.swing.JFrame {
     private void StorageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StorageButtonActionPerformed
         storageUI st = new storageUI();
         st.setLocation(this.getX(), this.getY());
+        st.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_StorageButtonActionPerformed
 
