@@ -7,6 +7,7 @@ package com.mycompany.finaltermproject;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -144,14 +145,14 @@ public class storageUI extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A to Z", "Z to A", "Low to High Price", "High to Low Price" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sort by","Name: A to Z", "Name: Z to A", "Low to High Price", "High to Low Price" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                jComboBox1ActionPerformed(evt);
             }
         });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "sort by type", "Food", "Drinks", "Spice", "Personal Hygiene Item", "Household Appliances" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Filter by type", "Foods", "Drinks", "Spices", "Personal Hygiene Items", "Household Appliances" }));
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox2ActionPerformed(evt);
@@ -246,19 +247,22 @@ public class storageUI extends javax.swing.JFrame {
         try {
             //Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
-            String query = "SELECT* FROM PRODUCT";
+            String query =  "SELECT pr.id, pr.product_name, pr.expiry, pr.import_price, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
+                            "FROM PRODUCT pr " +
+                            "JOIN product_type pt ON pr.product_type = pt.id";
 
-            java.sql.Statement st = con.createStatement();
-            ResultSet resultSet = st.executeQuery(query);
+            PreparedStatement pr = con.prepareStatement(query);
+            ResultSet resultSet = pr.executeQuery();
             java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
-            
+            defaultTableModel.setRowCount(0);
+
             int columnCount = resultSetMetaData.getColumnCount();
             String[] columnName = new String[columnCount];
             for (int i = 0; i < columnCount; i++) {
                 columnName[i] = resultSetMetaData.getColumnName(i+1);
-                defaultTableModel.setColumnIdentifiers(columnName);
             }
+            defaultTableModel.setColumnIdentifiers(columnName);
 
             String id, name, expiry, import_price,sell_price,quantity,product_type,origin;
             while (resultSet.next()) {
@@ -273,15 +277,19 @@ public class storageUI extends javax.swing.JFrame {
                 String[] row = {id,name,expiry,import_price,sell_price,origin,quantity,product_type};
                 defaultTableModel.addRow(row);
             }
-            jButton1.setEnabled(false);
+            //jButton1.setEnabled(false);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        updateTableData();
+    }
+
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox2ActionPerformed
+        updateTableData();
+    }
 
     /**
      * @param args the command line arguments
@@ -318,7 +326,6 @@ public class storageUI extends javax.swing.JFrame {
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton1;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -335,5 +342,64 @@ public class storageUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    // End of variables declaration//GEN-END:variables
+    
+    private void updateTableData() {
+        String sortOption = (String) jComboBox1.getSelectedItem();
+        String filterOption = (String) jComboBox2.getSelectedItem();
+        //filterOption = filterOption.toLowerCase();
+    
+        StringBuilder query = new StringBuilder("SELECT pr.id, pr.product_name, pr.expiry, pr.import_price, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
+                                                "FROM PRODUCT pr " +
+                                                "JOIN product_type pt ON pr.product_type = pt.id");
+    
+        boolean hasFilter = !filterOption.equals("Filter by type");
+        if (hasFilter) {
+            query.append(" WHERE pt.type_name = ?");
+        }
+    
+        switch (sortOption) {
+            case "Name: A to Z":
+                query.append(" ORDER BY pr.product_name ASC");
+                break;
+            case "Name: Z to A":
+                query.append(" ORDER BY pr.product_name DESC");
+                break;
+            case "Low to High Price":
+                query.append(" ORDER BY pr.sell_price ASC");
+                break;
+            case "High to Low Price":
+                query.append(" ORDER BY pr.sell_price DESC");
+                break;
+            default:
+                // No sorting
+                break;
+        }
+    
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+            PreparedStatement pr = con.prepareStatement(query.toString());
+            
+            if (hasFilter) {
+                pr.setString(1, filterOption);
+            }
+    
+            ResultSet resultSet = pr.executeQuery();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+    
+            // Clear the current data in the table
+            defaultTableModel.setRowCount(0);
+    
+            // Add rows to the table model
+            while (resultSet.next()) {
+                String[] row = new String[8];
+                for (int i = 0; i < 8; i++) {
+                    row[i] = resultSet.getString(i + 1);
+                }
+                defaultTableModel.addRow(row);
+            }
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -4,6 +4,14 @@
  */
 package com.mycompany.finaltermproject;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author letri
@@ -42,6 +50,7 @@ public class storeUI extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         jComboBox2 = new javax.swing.JComboBox<>();
         BackButton = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,10 +89,6 @@ public class storeUI extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
             },
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
@@ -138,14 +143,31 @@ public class storeUI extends javax.swing.JFrame {
                 .addGap(14, 14, 14))
         );
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A to Z", "Z to A", "Low to High Price", "High to Low Price" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sort by","Name: A to Z", "Name: Z to A", "Low to High Price", "High to Low Price" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Food", "Drinks", "Spice", "Personal Hygiene Item", "Household Appliances" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Filter by type", "Foods", "Drinks", "Spices", "Personal Hygiene Items", "Household Appliances" }));
+        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox2ActionPerformed(evt);
+            }
+        });
 
         BackButton.setText("Back");
         BackButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BackButtonActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Display Store");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -156,7 +178,9 @@ public class storeUI extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(BackButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 397, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addGap(39, 39, 39)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -169,7 +193,8 @@ public class storeUI extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BackButton))
+                    .addComponent(BackButton)
+                    .addComponent(jButton2))
                 .addContainerGap())
         );
 
@@ -200,7 +225,7 @@ public class storeUI extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 898, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
@@ -219,7 +244,7 @@ public class storeUI extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE)
         );
 
         pack();
@@ -231,6 +256,54 @@ public class storeUI extends javax.swing.JFrame {
         main.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+            String query =  "SELECT pr.id, pr.product_name, pr.expiry, pr.import_price, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
+                            "FROM PRODUCT pr " +
+                            "JOIN product_type pt ON pr.product_type = pt.id";
+
+            PreparedStatement pr = con.prepareStatement(query);
+            ResultSet resultSet = pr.executeQuery();
+            java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            defaultTableModel.setRowCount(0);
+
+            int columnCount = resultSetMetaData.getColumnCount();
+            String[] columnName = new String[columnCount];
+            for (int i = 0; i < columnCount; i++) {
+                columnName[i] = resultSetMetaData.getColumnName(i+1);
+            }
+            defaultTableModel.setColumnIdentifiers(columnName);
+
+            String id, name, expiry, import_price,sell_price,quantity,product_type,origin;
+            while (resultSet.next()) {
+                id = resultSet.getString(1);
+                name =  resultSet.getString(2);
+                expiry = resultSet.getString(3);
+                import_price = resultSet.getString(4);
+                sell_price = resultSet.getString(5);
+                origin = resultSet.getString(6);
+                quantity = resultSet.getString(7);
+                product_type = resultSet.getString(8);
+                String[] row = {id,name,expiry,import_price,sell_price,origin,quantity,product_type};
+                defaultTableModel.addRow(row);
+            }
+            //jButton1.setEnabled(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        updateTableData();
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+        updateTableData();
+    }//GEN-LAST:event_jComboBox2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -269,6 +342,7 @@ public class storeUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;
+    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
@@ -285,4 +359,64 @@ public class storeUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+
+    private void updateTableData() {
+        String sortOption = (String) jComboBox1.getSelectedItem();
+        String filterOption = (String) jComboBox2.getSelectedItem();
+        //filterOption = filterOption.toLowerCase();
+    
+        StringBuilder query = new StringBuilder("SELECT pr.id, pr.product_name, pr.expiry, pr.import_price, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
+                                                "FROM PRODUCT pr " +
+                                                "JOIN product_type pt ON pr.product_type = pt.id");
+    
+        boolean hasFilter = !filterOption.equals("Filter by type");
+        if (hasFilter) {
+            query.append(" WHERE pt.type_name = ?");
+        }
+    
+        switch (sortOption) {
+            case "Name: A to Z":
+                query.append(" ORDER BY pr.product_name ASC");
+                break;
+            case "Name: Z to A":
+                query.append(" ORDER BY pr.product_name DESC");
+                break;
+            case "Low to High Price":
+                query.append(" ORDER BY pr.sell_price ASC");
+                break;
+            case "High to Low Price":
+                query.append(" ORDER BY pr.sell_price DESC");
+                break;
+            default:
+                // No sorting
+                break;
+        }
+    
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+            PreparedStatement pr = con.prepareStatement(query.toString());
+            
+            if (hasFilter) {
+                pr.setString(1, filterOption);
+            }
+    
+            ResultSet resultSet = pr.executeQuery();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+    
+            // Clear the current data in the table
+            defaultTableModel.setRowCount(0);
+    
+            // Add rows to the table model
+            while (resultSet.next()) {
+                String[] row = new String[8];
+                for (int i = 0; i < 8; i++) {
+                    row[i] = resultSet.getString(i + 1);
+                }
+                defaultTableModel.addRow(row);
+            }
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
