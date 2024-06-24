@@ -8,8 +8,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import com.mysql.cj.xdevapi.Statement;
@@ -174,6 +176,11 @@ public class StaffUI extends javax.swing.JFrame {
         jTextField1.setText("Enter staff's name here");
 
         jButton3.setText("Search");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -307,6 +314,45 @@ public class StaffUI extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        if (jTextField1.getText().equals("Enter staff's name here")) {
+            JOptionPane.showMessageDialog(null, "Please enter staff's name!");
+        }
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+            String query = "SELECT* FROM STAFF WHERE name LIKE ?";
+
+            PreparedStatement pr = con.prepareStatement(query);
+            pr.setString(1, "%" + jTextField1.getText() + "%");
+            ResultSet resultSet = pr.executeQuery();
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            defaultTableModel.setRowCount(0);
+
+            int columnCount = resultSetMetaData.getColumnCount();
+            String[] columnName = new String[columnCount];
+            for (int i = 0; i < columnCount; i++) {
+                columnName[i] = resultSetMetaData.getColumnName(i+1);
+            }
+            defaultTableModel.setColumnIdentifiers(columnName);
+
+            String id, name, sex, dob, address;
+            while (resultSet.next()) {
+                id = resultSet.getString(1);
+                name =  resultSet.getString(2);
+                sex = resultSet.getString(3);
+                dob = resultSet.getString(4);
+                address = resultSet.getString(5);
+                String[] row = {id,name,sex, dob, address};
+                defaultTableModel.addRow(row);
+            }
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments

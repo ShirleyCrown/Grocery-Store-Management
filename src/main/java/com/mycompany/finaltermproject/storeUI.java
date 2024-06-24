@@ -8,8 +8,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -149,14 +151,14 @@ public class storeUI extends javax.swing.JFrame {
                 .addGap(14, 14, 14))
         );
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A to Z", "Z to A", "Low to High Price", "High to Low Price" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sort by", "Name: A to Z", "Name: Z to A", "Low to High Price", "High to Low Price" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
             }
         });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Food", "Drinks", "Spice", "Personal Hygiene Item", "Household Appliances" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Filter by type", "Foods", "Drinks", "Spices", "Personal Hygiene Items", "Household Appliances" }));
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox2ActionPerformed(evt);
@@ -181,6 +183,11 @@ public class storeUI extends javax.swing.JFrame {
         jTextField1.setText("Enter product's name");
 
         jButton1.setText("Search");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -191,7 +198,7 @@ public class storeUI extends javax.swing.JFrame {
                 .addComponent(BackButton)
                 .addGap(41, 41, 41)
                 .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -322,6 +329,51 @@ public class storeUI extends javax.swing.JFrame {
         updateTableData();
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (jTextField1.getText().equals("Enter product's name")) {
+            JOptionPane.showMessageDialog(null, "Please enter product's name!");
+        }
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+            String query = "SELECT pr.id, pr.product_name, pr.expiry, pr.import_price, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
+                            "FROM PRODUCT pr " +
+                            "JOIN product_type pt ON pr.product_type = pt.id " +
+                            "WHERE pr.product_name LIKE ?";
+
+            PreparedStatement pr = con.prepareStatement(query);
+            pr.setString(1, "%" + jTextField1.getText() + "%");
+            ResultSet resultSet = pr.executeQuery();
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            defaultTableModel.setRowCount(0);
+
+            int columnCount = resultSetMetaData.getColumnCount();
+            String[] columnName = new String[columnCount];
+            for (int i = 0; i < columnCount; i++) {
+                columnName[i] = resultSetMetaData.getColumnName(i+1);
+            }
+            defaultTableModel.setColumnIdentifiers(columnName);
+
+            String id, name, expiry, import_price,sell_price,quantity,product_type,origin;
+            while (resultSet.next()) {
+                id = resultSet.getString(1);
+                name =  resultSet.getString(2);
+                expiry = resultSet.getString(3);
+                import_price = resultSet.getString(4);
+                sell_price = resultSet.getString(5);
+                origin = resultSet.getString(6);
+                quantity = resultSet.getString(7);
+                product_type = resultSet.getString(8);
+                String[] row = {id,name,expiry,import_price,sell_price,origin,quantity,product_type};
+                defaultTableModel.addRow(row);
+            }
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+  
     /**
      * @param args the command line arguments
      */
