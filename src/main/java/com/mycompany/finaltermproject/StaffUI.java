@@ -4,6 +4,16 @@
  */
 package com.mycompany.finaltermproject;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.table.DefaultTableModel;
+
+import com.mysql.cj.xdevapi.Statement;
+
 /**
  *
  * @author letri
@@ -80,10 +90,6 @@ public class StaffUI extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
             },
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
@@ -243,11 +249,46 @@ public class StaffUI extends javax.swing.JFrame {
     }//GEN-LAST:event_BackButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        EditstaffUI editstaffUI = new EditstaffUI();
+        editstaffUI.setLocationRelativeTo(null);
+        editstaffUI.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        try {
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+            String query =  "SELECT* FROM STAFF";
+
+            java.sql.Statement st = con.createStatement();
+            ResultSet resultSet = st.executeQuery(query);
+            java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            defaultTableModel.setRowCount(0);
+
+            int columnCount = resultSetMetaData.getColumnCount();
+            String[] columnName = new String[columnCount];
+            for (int i = 0; i < columnCount; i++) {
+                columnName[i] = resultSetMetaData.getColumnName(i+1);
+            }
+            defaultTableModel.setColumnIdentifiers(columnName);
+
+            String id, name, sex, dob, address;
+            while (resultSet.next()) {
+                id = resultSet.getString(1);
+                name =  resultSet.getString(2);
+                sex = resultSet.getString(3);
+                dob = resultSet.getString(4);
+                address = resultSet.getString(5);
+                
+                String[] row = {id,name,sex, dob, address};
+                defaultTableModel.addRow(row);
+            }
+            //jButton1.setEnabled(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
