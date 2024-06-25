@@ -273,7 +273,7 @@ public class StaffUI extends javax.swing.JFrame {
     }//GEN-LAST:event_BackButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        EditstaffUI editstaffUI = new EditstaffUI();
+        EditStaffUI editstaffUI = new EditStaffUI();
         editstaffUI.setLocationRelativeTo(null);
         editstaffUI.setVisible(true);
         this.dispose();
