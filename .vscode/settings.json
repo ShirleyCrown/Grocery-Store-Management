@@ -15,5 +15,6 @@
             "password": "2704",
             "connectionTimeout": 30
         }
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
