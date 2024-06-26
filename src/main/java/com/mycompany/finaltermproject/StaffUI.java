@@ -54,7 +54,7 @@ public class StaffUI extends javax.swing.JFrame {
         BackButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        SearchTextField = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -172,8 +172,13 @@ public class StaffUI extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        jTextField1.setText("Enter staff's name here");
+        SearchTextField.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        SearchTextField.setText("Enter staff's name here");
+        SearchTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                SearchTextFieldMouseClicked(evt);
+            }
+        });
 
         jButton3.setText("Search");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -194,7 +199,7 @@ public class StaffUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
                 .addGap(37, 37, 37))
@@ -207,7 +212,7 @@ public class StaffUI extends javax.swing.JFrame {
                     .addComponent(BackButton)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3))
                 .addContainerGap())
         );
@@ -316,7 +321,7 @@ public class StaffUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        if (jTextField1.getText().equals("Enter staff's name here")) {
+        if (SearchTextField.getText().equals("Enter staff's name here")) {
             JOptionPane.showMessageDialog(null, "Please enter staff's name!");
         }
         try {
@@ -324,7 +329,7 @@ public class StaffUI extends javax.swing.JFrame {
             String query = "SELECT* FROM STAFF WHERE name LIKE ?";
 
             PreparedStatement pr = con.prepareStatement(query);
-            pr.setString(1, "%" + jTextField1.getText() + "%");
+            pr.setString(1, "%" + SearchTextField.getText() + "%");
             ResultSet resultSet = pr.executeQuery();
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
@@ -353,6 +358,10 @@ public class StaffUI extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void SearchTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SearchTextFieldMouseClicked
+        SearchTextField.setText("");
+    }//GEN-LAST:event_SearchTextFieldMouseClicked
 
     /**
      * @param args the command line arguments
@@ -391,6 +400,7 @@ public class StaffUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;
+    private javax.swing.JTextField SearchTextField;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -407,6 +417,5 @@ public class StaffUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

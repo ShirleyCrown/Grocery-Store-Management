@@ -52,7 +52,7 @@ public class storageUI extends javax.swing.JFrame {
         jComboBox2 = new javax.swing.JComboBox<>();
         BackButton1 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        SearchTextField = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -179,8 +179,23 @@ public class storageUI extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        jTextField1.setText("Enter product's name");
+        SearchTextField.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        SearchTextField.setText("Enter product's name");
+        SearchTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                SearchTextFieldFocusLost(evt);
+            }
+        });
+        SearchTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                SearchTextFieldMouseClicked(evt);
+            }
+        });
+        SearchTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SearchTextFieldActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Search");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -201,7 +216,7 @@ public class storageUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -217,7 +232,7 @@ public class storageUI extends javax.swing.JFrame {
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BackButton1)
                     .addComponent(jButton1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2))
                 .addContainerGap())
         );
@@ -306,7 +321,7 @@ public class storageUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if (jTextField1.getText().equals("Enter product's name")) {
+        if (SearchTextField.getText().equals("Enter product's name")) {
             JOptionPane.showMessageDialog(null, "Please enter product's name!");
         }
         try {
@@ -317,7 +332,7 @@ public class storageUI extends javax.swing.JFrame {
                             "WHERE pr.product_name LIKE ?";
 
             PreparedStatement pr = con.prepareStatement(query);
-            pr.setString(1, "%" + jTextField1.getText() + "%");
+            pr.setString(1, "%" + SearchTextField.getText() + "%");
             ResultSet resultSet = pr.executeQuery();
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
@@ -358,6 +373,18 @@ public class storageUI extends javax.swing.JFrame {
         updateTableData();
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
+    private void SearchTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SearchTextFieldMouseClicked
+       SearchTextField.setText("");
+    }//GEN-LAST:event_SearchTextFieldMouseClicked
+
+    private void SearchTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_SearchTextFieldActionPerformed
+
+    private void SearchTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusLost
+        SearchTextField.setText("Enter product's name");
+    }//GEN-LAST:event_SearchTextFieldFocusLost
+
     /**
      * @param args the command line arguments
      */
@@ -395,6 +422,7 @@ public class storageUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton1;
+    private javax.swing.JTextField SearchTextField;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -411,7 +439,6 @@ public class storageUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
     private void updateTableData() {
