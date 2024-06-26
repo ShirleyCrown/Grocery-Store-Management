@@ -51,12 +51,17 @@ public class storageUI extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         jComboBox2 = new javax.swing.JComboBox<>();
         BackButton1 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        RefreshButton = new javax.swing.JButton();
         SearchTextField = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        SearchButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(900, 600));
@@ -173,10 +178,10 @@ public class storageUI extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Display Storage");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        RefreshButton.setText("Refresh");
+        RefreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                RefreshButtonActionPerformed(evt);
             }
         });
 
@@ -204,10 +209,10 @@ public class storageUI extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Search");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        SearchButton.setText("Search");
+        SearchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                SearchButtonActionPerformed(evt);
             }
         });
 
@@ -219,9 +224,9 @@ public class storageUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(BackButton1)
                 .addGap(30, 30, 30)
-                .addComponent(jButton1)
+                .addComponent(RefreshButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(SearchButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -238,9 +243,9 @@ public class storageUI extends javax.swing.JFrame {
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BackButton1)
-                    .addComponent(jButton1)
+                    .addComponent(RefreshButton)
                     .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(SearchButton))
                 .addContainerGap())
         );
 
@@ -287,7 +292,7 @@ public class storageUI extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_BackButton1ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void RefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshButtonActionPerformed
         try {
             //Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
@@ -330,9 +335,9 @@ public class storageUI extends javax.swing.JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_RefreshButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
         if (SearchTextField.getText().equals("Enter product's name")) {
             JOptionPane.showMessageDialog(null, "Please enter product's name!");
         }
@@ -380,7 +385,7 @@ public class storageUI extends javax.swing.JFrame {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_SearchButtonActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         updateTableData();
@@ -409,6 +414,51 @@ public class storageUI extends javax.swing.JFrame {
     private void SearchTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusGained
         SearchTextField.setText("");
     }//GEN-LAST:event_SearchTextFieldFocusGained
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        try {
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+            String query =  "SELECT pr.id, pr.product_name, pr.expiry, pr.import_price, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
+                            "FROM PRODUCT pr " +
+                            "JOIN product_type pt ON pr.product_type = pt.id";
+
+            PreparedStatement pr = con.prepareStatement(query);
+            ResultSet resultSet = pr.executeQuery();
+            java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            defaultTableModel.setRowCount(0);
+
+            int columnCount = resultSetMetaData.getColumnCount();
+            String[] columnName = new String[columnCount];
+            columnName[0] = "ID";
+            columnName[1] = "Product name";
+            columnName[2] = "Expiry";
+            columnName[3] =  "Import price";
+            columnName[4] = "Sell price";
+            columnName[5] = "Origin";
+            columnName[6] = "Quantity";
+            columnName[7] = "Product type";
+            defaultTableModel.setColumnIdentifiers(columnName);
+
+            String id, name, expiry, import_price,sell_price,quantity,product_type,origin;
+            while (resultSet.next()) {
+                id = resultSet.getString(1);
+                name =  resultSet.getString(2);
+                expiry = resultSet.getString(3);
+                import_price = resultSet.getString(4);
+                sell_price = resultSet.getString(5);
+                origin = resultSet.getString(6);
+                quantity = resultSet.getString(7);
+                product_type = resultSet.getString(8);
+                String[] row = {id,name,expiry,import_price,sell_price,origin,quantity,product_type};
+                defaultTableModel.addRow(row);
+            }
+            //jButton1.setEnabled(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
@@ -447,9 +497,9 @@ public class storageUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton1;
+    private javax.swing.JButton RefreshButton;
+    private javax.swing.JButton SearchButton;
     private javax.swing.JTextField SearchTextField;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel2;
