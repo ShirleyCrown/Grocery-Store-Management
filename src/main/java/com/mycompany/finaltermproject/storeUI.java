@@ -527,7 +527,7 @@ public class storeUI extends javax.swing.JFrame {
         String filterOption = (String) jComboBox2.getSelectedItem();
         //filterOption = filterOption.toLowerCase();
     
-        StringBuilder query = new StringBuilder("SELECT pr.id, pr.product_name, pr.expiry, pr.import_price, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
+        StringBuilder query = new StringBuilder("SELECT pr.id, pr.product_name, pr.expiry, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
                                                 "FROM PRODUCT pr " +
                                                 "JOIN product_type pt ON pr.product_type = pt.id");
     
@@ -570,8 +570,8 @@ public class storeUI extends javax.swing.JFrame {
     
             // Add rows to the table model
             while (resultSet.next()) {
-                String[] row = new String[8];
-                for (int i = 0; i < 8; i++) {
+                String[] row = new String[7];
+                for (int i = 0; i < 7; i++) {
                     row[i] = resultSet.getString(i + 1);
                 }
                 defaultTableModel.addRow(row);
