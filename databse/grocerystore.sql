@@ -1,70 +1,83 @@
-create database GROCERYSTORE;
-use GROCERYSTORE;
+CREATE DATABASE GROCERYSTORE;
+USE GROCERYSTORE;
+
+-- Create the PRODUCT table
 CREATE TABLE PRODUCT(
-	id VARCHAR(10) PRIMARY KEY,
-    product_name varchar(50),
-    expiry date,
-    import_price int,
-    sell_price int,
-    origin nvarchar(50),
-    quantity int,
-    product_type varchar(10)    
+    id VARCHAR(10) PRIMARY KEY,
+    product_name VARCHAR(50),
+    expiry DATE,
+    import_price INT,
+    sell_price INT,
+    origin NVARCHAR(50),
+    quantity INT,
+    product_type VARCHAR(10)    
 );
 
+-- Create the PRODUCT_TYPE table
 CREATE TABLE PRODUCT_TYPE (
-	id varchar(10) primary key,
-    type_name varchar(50)
-);	
+    id VARCHAR(10) PRIMARY KEY,
+    type_name VARCHAR(50)
+);  
 
-alter table PRODUCT add constraint fk_product_type
-foreign key (product_type ) references PRODUCT_TYPE(id);
+-- Create foreign key constraint for PRODUCT table
+ALTER TABLE PRODUCT ADD CONSTRAINT fk_product_type
+FOREIGN KEY (product_type) REFERENCES PRODUCT_TYPE(id);
 
-create table INCOME_DETAILS(
-	product_id varchar(10),
-    sold_quantity int,
-    report_month int primary key
+-- Create the INCOME_DETAILS table
+CREATE TABLE INCOME_DETAILS(
+    product_id VARCHAR(10),
+    sold_quantity INT,
+    report_month INT,
+    PRIMARY KEY (product_id, report_month)
 );
 
-create table INCOME_REPORT(
-	report_month int primary key,
-    income int
+-- Create the INCOME_REPORT table with computed income
+CREATE TABLE INCOME_REPORT(
+    report_month INT PRIMARY KEY,
+    income INT
 );
 
-alter table income_details add constraint fk_product_id 
-foreign key (product_id) references PRODUCT(id);
-CREATE INDEX idx_report_month ON INCOME_REPORT(report_month);
-alter table income_report add constraint fk_report_month
-foreign key (report_month) references INCOME_REPORT(report_month);
+-- Create foreign key constraint for INCOME_DETAILS table
+ALTER TABLE INCOME_DETAILS ADD CONSTRAINT fk_product_id 
+FOREIGN KEY (product_id) REFERENCES PRODUCT(id);
 
-create table IMPORT_STATISTIC_SHEET (
-	id varchar(10) primary key,
-    product_id varchar(10),
-    price int,
-    statistical_day date,
-    statistician varchar(10)
+-- Create the IMPORT_STATISTIC_SHEET table
+CREATE TABLE IMPORT_STATISTIC_SHEET (
+    id VARCHAR(10) PRIMARY KEY,
+    product_id VARCHAR(10),
+    price INT,
+    statistical_day DATE,
+    statistician VARCHAR(10)
 );
 
-CREATE table ACCOUNT (
-	username varchar(10) primary key,
-    password varchar(50)
+-- Create the ACCOUNT table
+CREATE TABLE ACCOUNT (
+    username VARCHAR(10) PRIMARY KEY,
+    password VARCHAR(50)
 );
 
-create table STAFF(
-	id varchar(10),
-    name varchar(50),
+-- Create the STAFF table
+CREATE TABLE STAFF(
+    id VARCHAR(10) PRIMARY KEY,
+    name VARCHAR(50),
     sex ENUM('male', 'female'),
-    dob date,
-    address varchar(50)
+    dob DATE,
+    address VARCHAR(50)
 );
 
-alter table IMPORT_STATISTIC_SHEET add constraint fk_product_id_1 
-foreign key (product_id) references PRODUCT(id);
-CREATE INDEX idx_statiscian ON STAFF(id);
-alter table IMPORT_STATISTIC_SHEET add constraint fk_statistician_1
-foreign key (statistician) references STAFF(id);
-alter table ACCOUNT add constraint fk_username
-foreign key (username) references STAFF(id);
+-- Create foreign key constraint for IMPORT_STATISTIC_SHEET table
+ALTER TABLE IMPORT_STATISTIC_SHEET ADD CONSTRAINT fk_product_id_1 
+FOREIGN KEY (product_id) REFERENCES PRODUCT(id);
 
+-- Create foreign key constraint for IMPORT_STATISTIC_SHEET table for statistician
+ALTER TABLE IMPORT_STATISTIC_SHEET ADD CONSTRAINT fk_statistician_1
+FOREIGN KEY (statistician) REFERENCES STAFF(id);
+
+-- Create foreign key constraint for ACCOUNT table
+ALTER TABLE ACCOUNT ADD CONSTRAINT fk_username
+FOREIGN KEY (username) REFERENCES STAFF(id);
+
+-- Insert data into PRODUCT_TYPE table
 INSERT INTO PRODUCT_TYPE (id, type_name) VALUES
 ('Fo', 'foods'),
 ('Dr', 'drinks'),
@@ -72,6 +85,7 @@ INSERT INTO PRODUCT_TYPE (id, type_name) VALUES
 ('HPI', 'personal hygiene items'),
 ('HA', 'household appliances');
 
+-- Insert data into STAFF table
 INSERT INTO STAFF (id, name, sex, dob, address)
 VALUES
 ('S001', 'John Doe', 'male', '1990-05-15', '123 Main St, New York'),
@@ -105,6 +119,7 @@ VALUES
 ('S029', 'Brandon Campbell', 'male', '1986-08-28', '456 Pine Ave, Chicago'),
 ('admin', 'Alexis Price', 'female', '1994-02-01', '567 Elm Blvd, Miami');
 
+-- Insert data into ACCOUNT table
 INSERT INTO ACCOUNT (username, password)
 VALUES
 ('S001', 'password001'),
@@ -138,12 +153,13 @@ VALUES
 ('S029', 'password029'),
 ('admin', 'admin');
 
+-- Insert data into PRODUCT table
 INSERT INTO PRODUCT (id, product_name, expiry, import_price, sell_price, origin, quantity, product_type)
 VALUES
 ('P001', 'Rice', '2024-12-31', 5000, 7000, 'Vietnam', 100, 'Fo'),
 ('P002', 'Coca Cola', '2024-08-31', 3000, 5000, 'USA', 200, 'Dr'),
 ('P003', 'Black Pepper', '2023-06-30', 15000, 20000, 'India', 50, 'Sp'),
-('P004', 'Toothpaste', '2025-02-28', 8000, 12000, 'Germany', 80, 'HPI'),
+('P004', 'Toothpaste', '2025-02-28', 8000, 12000, 'Germany', 0, 'HPI'),
 ('P005', 'Washing Machine', NULL, 3000000, 3500000, 'China', 30, 'HA'),
 ('P006', 'Chicken', '2024-06-30', 20000, 25000, 'Brazil', 150, 'Fo'),
 ('P007', 'Orange Juice', '2024-09-30', 10000, 15000, 'Spain', 100, 'Dr'),
@@ -153,25 +169,66 @@ VALUES
 ('P011', 'Beef', '2024-05-31', 25000, 30000, 'Australia', 120, 'Fo'),
 ('P012', 'Apple Juice', '2024-08-31', 12000, 18000, 'Italy', 80, 'Dr'),
 ('P013', 'Turmeric', '2023-11-30', 18000, 25000, 'India', 60, 'Sp'),
-('P014', 'Soap', '2024-03-31', 7000, 10000, 'Germany', 90, 'HPI'),
+('P014', 'Soap', '2024-03-31', 7000, 10000, 'Germany', 0, 'HPI'),
 ('P015', 'Microwave', NULL, 2000000, 2500000, 'Japan', 25, 'HA'),
 ('P016', 'Pork', '2024-07-31', 22000, 28000, 'Vietnam', 110, 'Fo'),
-('P017', 'Grape Juice', '2024-10-31', 11000, 16000, 'USA', 70, 'Dr'),
+('P017', 'Grape Juice', '2024-10-31', 11000, 16000, 'USA', 0, 'Dr'),
 ('P018', 'Garlic', '2023-10-31', 10000, 15000, 'China', 45, 'Sp'),
 ('P019', 'Deodorant', '2024-06-30', 8500, 12000, 'France', 60, 'HPI'),
 ('P020', 'Dishwasher', NULL, 4000000, 4800000, 'Germany', 15, 'HA'),
 ('P021', 'Lamb', '2024-04-30', 28000, 35000, 'New Zealand', 80, 'Fo'),
 ('P022', 'Lemonade', '2024-09-30', 9000, 14000, 'Brazil', 85, 'Dr'),
-('P023', 'Coriander', '2023-12-31', 13000, 20000, 'India', 55, 'Sp'),
+('P023', 'Coriander', '2023-12-31', 13000, 20000, 'India', 0, 'Sp'),
 ('P024', 'Conditioner', '2024-03-31', 9500, 14000, 'Italy', 75, 'HPI'),
 ('P025', 'Oven', NULL, 3000000, 3800000, 'South Korea', 20, 'HA'),
 ('P026', 'Fish', '2024-08-31', 18000, 23000, 'Norway', 95, 'Fo'),
 ('P027', 'Mango Juice', '2024-11-30', 13000, 18000, 'India', 65, 'Dr'),
 ('P028', 'Cardamom', '2023-09-30', 16000, 22000, 'Guatemala', 50, 'Sp'),
-('P029', 'Toilet Paper', '2024-05-31', 6000, 9000, 'Canada', 110, 'HPI'),
+('P029', 'Toilet Paper', '2024-05-31', 6000, 9000, 'Canada', 0, 'HPI'),
 ('P030', 'TV', NULL, 6000000, 7000000, 'USA', 10, 'HA');
 
+-- Insert data into INCOME_DETAILS table
+INSERT INTO INCOME_DETAILS (product_id, sold_quantity, report_month)
+VALUES
+('P001', 10, 202301),
+('P002', 15, 202301),
+('P003', 8, 202301),
+('P004', 20, 202302),
+('P005', 5, 202302),
+('P006', 12, 202302),
+('P007', 30, 202303),
+('P008', 18, 202303),
+('P009', 25, 202303),
+('P010', 3, 202304),
+('P011', 14, 202304),
+('P012', 22, 202304),
+('P013', 19, 202305),
+('P014', 27, 202305),
+('P015', 6, 202305),
+('P016', 21, 202306),
+('P017', 17, 202306),
+('P018', 26, 202306),
+('P019', 9, 202307),
+('P020', 16, 202307),
+('P021', 23, 202307),
+('P022', 13, 202308),
+('P023', 20, 202308),
+('P024', 11, 202308),
+('P025', 8, 202309),
+('P026', 18, 202309),
+('P027', 24, 202309),
+('P028', 7, 202310),
+('P029', 15, 202310),
+('P030', 12, 202310),
+('P001', 14, 202311),
+('P002', 22, 202311),
+('P003', 19, 202311),
+('P004', 27, 202312),
+('P005', 6, 202312),
+('P006', 21, 202312),
+('P007', 25, 202312);
 
+-- Insert data into IMPORT_STATISTIC_SHEET table
 INSERT INTO IMPORT_STATISTIC_SHEET (id, product_id, price, statistical_day, statistician)
 VALUES
 ('ISS001', 'P001', 200000, '2024-06-01', 'S001'),
@@ -205,9 +262,13 @@ VALUES
 ('ISS029', 'P029', 90000, '2024-06-29', 'S029'),
 ('ISS030', 'P030', 7000000, '2024-06-30', 'admin');
 
-
-
-
-
-
-
+INSERT INTO INCOME_REPORT (report_month, income)
+SELECT
+    id.report_month,
+    SUM(id.sold_quantity * p.sell_price) AS income
+FROM
+    INCOME_DETAILS id
+JOIN
+    PRODUCT p ON id.product_id = p.id
+GROUP BY
+    id.report_month;

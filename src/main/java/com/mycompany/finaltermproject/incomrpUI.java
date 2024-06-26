@@ -4,6 +4,14 @@
  */
 package com.mycompany.finaltermproject;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author letri
@@ -41,9 +49,16 @@ public class incomrpUI extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         BackButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -144,7 +159,21 @@ public class incomrpUI extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Display data");
+        jButton1.setText("Reset");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Choose month", "January", "February", "March", "April", "May", "June", "July", "August", "November", "October", "September", "December" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Choose month for details:");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -153,9 +182,13 @@ public class incomrpUI extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(BackButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(53, 53, 53)
                 .addComponent(jButton1)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,7 +196,9 @@ public class incomrpUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BackButton)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addContainerGap())
         );
 
@@ -211,6 +246,271 @@ public class incomrpUI extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
 
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        try {
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+            String query =  "SELECT * FROM INCOME_REPORT";
+
+            PreparedStatement pr = con.prepareStatement(query);
+            ResultSet resultSet = pr.executeQuery();
+            java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            defaultTableModel.setRowCount(0);
+
+            int columnCount = resultSetMetaData.getColumnCount();
+            String[] columnName = new String[columnCount];
+            columnName[0] = "Month";
+            columnName[1] = "Total income";
+            defaultTableModel.setColumnIdentifiers(columnName);
+
+            String month, income;
+            while (resultSet.next()) {
+                month = resultSet.getString(1);
+                switch (month) {
+                    case "202301":
+                        month = "January";
+                        break;
+                    case "202302":
+                        month = "February";
+                        break;
+                    case "202303":
+                        month = "March";
+                        break;
+                    case "202304":
+                        month = "April";
+                        break;
+                    case "202305":
+                        month = "May";
+                        break;
+                    case "202306":
+                        month = "June";
+                        break;
+                    case "202307":
+                        month = "July";
+                        break;
+                    case "202308":
+                        month = "August";
+                        break;
+                    case "202309":
+                        month = "November";
+                        break;
+                    case "202310":
+                        month = "October";
+                        break;
+                    case "202311":
+                        month = "September";
+                        break;
+                    case "202312":
+                        month = "December";
+                        break;
+                    default:
+                        break;
+                }
+                income =  resultSet.getString(2);
+                String[] row = {month,income};
+                defaultTableModel.addRow(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_formWindowActivated
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+            String query =  "SELECT * FROM INCOME_DETAILS WHERE REPORT_MONTH = ?";
+
+            PreparedStatement pr = con.prepareStatement(query);
+            String month;
+            switch ((String)jComboBox1.getSelectedItem()) {
+                    case "January":
+                        month = "202301";
+                        pr.setString(1, month);
+                        break;
+                    case "February":
+                        month = "202302";
+                        pr.setString(1, month);
+                        break;
+                    case "March":
+                        month = "202303";
+                        pr.setString(1, month);
+                        break;
+                    case "April":
+                        month = "202304";
+                        pr.setString(1, month);
+                        break;
+                    case "May":
+                        month = "202305";
+                        pr.setString(1, month);
+                        break;
+                    case "June":
+                        month = "202306";
+                        pr.setString(1, month);
+                        break;
+                    case "July":
+                        month = "202307";
+                        pr.setString(1, month);
+                        break;
+                    case "August":
+                        month = "202308";
+                        pr.setString(1, month);
+                        break;
+                    case "November":
+                        month = "202309";
+                        pr.setString(1, month);
+                        break;
+                    case "October":
+                        month = "202310";
+                        pr.setString(1, month);
+                        break;
+                    case "September":
+                        month = "202311";
+                        pr.setString(1, month);
+                        break;
+                    case "December":
+                        month = "202312";
+                        pr.setString(1, month);
+                        break;
+                    default:
+                        return;
+            
+                }
+                
+            ResultSet resultSet = pr.executeQuery();
+            java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            defaultTableModel.setRowCount(0);
+
+            int columnCount = resultSetMetaData.getColumnCount();
+            String[] columnName = new String[columnCount];
+            columnName[0] = "Product ID";
+            columnName[1] = "Sold quantity";
+            columnName[2] = "Report month";
+            defaultTableModel.setColumnIdentifiers(columnName);
+
+            String month1,sold_quantity,ID;
+            while (resultSet.next()) {
+                ID = resultSet.getString(1);
+                month1 = resultSet.getString(3);
+                switch (month1) {
+                    case "202301":
+                        month1 = "January";
+                        break;
+                    case "202302":
+                        month1 = "February";
+                        break;
+                    case "202303":
+                        month1 = "March";
+                        break;
+                    case "202304":
+                        month1 = "April";
+                        break;
+                    case "202305":
+                        month1 = "May";
+                        break;
+                    case "202306":
+                        month1 = "June";
+                        break;
+                    case "202307":
+                        month1 = "July";
+                        break;
+                    case "202308":
+                        month1 = "August";
+                        break;
+                    case "202309":
+                        month1 = "November";
+                        break;
+                    case "202310":
+                        month1 = "October";
+                        break;
+                    case "202311":
+                        month1 = "September";
+                        break;
+                    case "202312":
+                        month1 = "December";
+                        break;
+                    default:
+                        break;
+                }
+                sold_quantity =  resultSet.getString(2);
+                String[] row = {ID,sold_quantity,month1};
+                defaultTableModel.addRow(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+            String query =  "SELECT * FROM INCOME_REPORT";
+
+            PreparedStatement pr = con.prepareStatement(query);
+            ResultSet resultSet = pr.executeQuery();
+            java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            defaultTableModel.setRowCount(0);
+
+            int columnCount = resultSetMetaData.getColumnCount();
+            String[] columnName = new String[columnCount];
+            columnName[0] = "Month";
+            columnName[1] = "Total income";
+            defaultTableModel.setColumnIdentifiers(columnName);
+
+            String month, income;
+            while (resultSet.next()) {
+                month = resultSet.getString(1);
+                switch (month) {
+                    case "202301":
+                        month = "January";
+                        break;
+                    case "202302":
+                        month = "February";
+                        break;
+                    case "202303":
+                        month = "March";
+                        break;
+                    case "202304":
+                        month = "April";
+                        break;
+                    case "202305":
+                        month = "May";
+                        break;
+                    case "202306":
+                        month = "June";
+                        break;
+                    case "202307":
+                        month = "July";
+                        break;
+                    case "202308":
+                        month = "August";
+                        break;
+                    case "202309":
+                        month = "November";
+                        break;
+                    case "202310":
+                        month = "October";
+                        break;
+                    case "202311":
+                        month = "September";
+                        break;
+                    case "202312":
+                        month = "December";
+                        break;
+                    default:
+                        break;
+                }
+                income =  resultSet.getString(2);
+                String[] row = {month,income};
+                defaultTableModel.addRow(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -249,6 +549,8 @@ public class incomrpUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;
     private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
