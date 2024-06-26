@@ -45,6 +45,7 @@ public class DeleteStaff extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Delete Staff");
@@ -73,10 +74,9 @@ public class DeleteStaff extends javax.swing.JFrame {
 
         jLabel4.setForeground(new java.awt.Color(255, 0, 51));
         jLabel4.setText("Something....");
-        jLabel4.setVisible(false);
+
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton2.setText("YES");
-        jButton2.setVisible(false);
         jButton2.setPreferredSize(new java.awt.Dimension(70, 27));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -86,7 +86,6 @@ public class DeleteStaff extends javax.swing.JFrame {
 
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton3.setText("NO");
-        jButton3.setVisible(false);
         jButton3.setPreferredSize(new java.awt.Dimension(70, 27));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
