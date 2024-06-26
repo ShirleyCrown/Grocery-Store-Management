@@ -296,9 +296,10 @@ public class storeUI extends javax.swing.JFrame {
         try {
             //Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
-            String query =  "SELECT pr.id, pr.product_name, pr.expiry, pr.import_price, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
+            String query =  "SELECT pr.id, pr.product_name, pr.expiry ,pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
                             "FROM PRODUCT pr " +
-                            "JOIN product_type pt ON pr.product_type = pt.id";
+                            "JOIN product_type pt ON pr.product_type = pt.id " + 
+                            "WHERE pr.quantity > 0";
 
             PreparedStatement pr = con.prepareStatement(query);
             ResultSet resultSet = pr.executeQuery();
@@ -314,11 +315,10 @@ public class storeUI extends javax.swing.JFrame {
             columnName[0] = "ID";
             columnName[1] = "Product name";
             columnName[2] = "Expiry";
-            columnName[3] =  "Import price";
-            columnName[4] = "Sell price";
-            columnName[5] = "Origin";
-            columnName[6] = "Quantity";
-            columnName[7] = "Product type";
+            columnName[3] = "Sell price";
+            columnName[4] = "Origin";
+            columnName[5] = "Quantity";
+            columnName[6] = "Product type";
             defaultTableModel.setColumnIdentifiers(columnName);
 
             String id, name, expiry, import_price,sell_price,quantity,product_type,origin;
@@ -326,12 +326,11 @@ public class storeUI extends javax.swing.JFrame {
                 id = resultSet.getString(1);
                 name =  resultSet.getString(2);
                 expiry = resultSet.getString(3);
-                import_price = resultSet.getString(4);
-                sell_price = resultSet.getString(5);
-                origin = resultSet.getString(6);
-                quantity = resultSet.getString(7);
-                product_type = resultSet.getString(8);
-                String[] row = {id,name,expiry,import_price,sell_price,origin,quantity,product_type};
+                sell_price = resultSet.getString(4);
+                origin = resultSet.getString(5);
+                quantity = resultSet.getString(6);
+                product_type = resultSet.getString(7);
+                String[] row = {id,name,expiry,sell_price,origin,quantity,product_type};
                 defaultTableModel.addRow(row);
             }
             //jButton1.setEnabled(false);
@@ -354,10 +353,10 @@ public class storeUI extends javax.swing.JFrame {
         }
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
-            String query = "SELECT pr.id, pr.product_name, pr.expiry, pr.import_price, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
+            String query = "SELECT pr.id, pr.product_name, pr.expiry, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
                             "FROM PRODUCT pr " +
                             "JOIN product_type pt ON pr.product_type = pt.id " +
-                            "WHERE pr.product_name LIKE ?";
+                            "WHERE pr.product_name LIKE ? AND pr.expiry > 0";
 
             PreparedStatement pr = con.prepareStatement(query);
             pr.setString(1, "%" + SearchTextField.getText() + "%");
@@ -374,24 +373,22 @@ public class storeUI extends javax.swing.JFrame {
             columnName[0] = "ID";
             columnName[1] = "Product name";
             columnName[2] = "Expiry";
-            columnName[3] =  "Import price";
-            columnName[4] = "Sell price";
-            columnName[5] = "Origin";
-            columnName[6] = "Quantity";
-            columnName[7] = "Product type";
+            columnName[3] = "Sell price";
+            columnName[4] = "Origin";
+            columnName[5] = "Quantity";
+            columnName[6] = "Product type";
             defaultTableModel.setColumnIdentifiers(columnName);
 
-            String id, name, expiry, import_price,sell_price,quantity,product_type,origin;
+            String id, name, expiry, sell_price,quantity,product_type,origin;
             while (resultSet.next()) {
                 id = resultSet.getString(1);
                 name =  resultSet.getString(2);
                 expiry = resultSet.getString(3);
-                import_price = resultSet.getString(4);
-                sell_price = resultSet.getString(5);
-                origin = resultSet.getString(6);
-                quantity = resultSet.getString(7);
-                product_type = resultSet.getString(8);
-                String[] row = {id,name,expiry,import_price,sell_price,origin,quantity,product_type};
+                sell_price = resultSet.getString(4);
+                origin = resultSet.getString(5);
+                quantity = resultSet.getString(6);
+                product_type = resultSet.getString(7);
+                String[] row = {id,name,expiry,sell_price,origin,quantity,product_type};
                 defaultTableModel.addRow(row);
             }
 
