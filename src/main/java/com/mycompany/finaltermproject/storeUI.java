@@ -52,12 +52,17 @@ public class storeUI extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         jComboBox2 = new javax.swing.JComboBox<>();
         BackButton = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        RefreshButton = new javax.swing.JButton();
         SearchTextField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setPreferredSize(new java.awt.Dimension(898, 602));
 
@@ -173,10 +178,10 @@ public class storeUI extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Display Store");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        RefreshButton.setText("Refresh");
+        RefreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                RefreshButtonActionPerformed(evt);
             }
         });
 
@@ -211,8 +216,8 @@ public class storeUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(BackButton)
                 .addGap(41, 41, 41)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                .addComponent(RefreshButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -230,7 +235,7 @@ public class storeUI extends javax.swing.JFrame {
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BackButton)
-                    .addComponent(jButton2)
+                    .addComponent(RefreshButton)
                     .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
                 .addContainerGap())
@@ -295,7 +300,7 @@ public class storeUI extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void RefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshButtonActionPerformed
         try {
             //Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
@@ -340,7 +345,7 @@ public class storeUI extends javax.swing.JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_RefreshButtonActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         updateTableData();
@@ -412,6 +417,53 @@ public class storeUI extends javax.swing.JFrame {
     private void SearchTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusLost
         SearchTextField.setText("Enter product's name");
     }//GEN-LAST:event_SearchTextFieldFocusLost
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        try {
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+            String query =  "SELECT pr.id, pr.product_name, pr.expiry ,pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
+                            "FROM PRODUCT pr " +
+                            "JOIN product_type pt ON pr.product_type = pt.id " + 
+                            "WHERE pr.quantity > 0";
+
+            PreparedStatement pr = con.prepareStatement(query);
+            ResultSet resultSet = pr.executeQuery();
+            java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            defaultTableModel.setRowCount(0);
+
+            int columnCount = resultSetMetaData.getColumnCount();
+            String[] columnName = new String[columnCount];
+            /* for (int i = 0; i < columnCount; i++) {
+                columnName[i] = resultSetMetaData.getColumnName(i+1);
+            } */
+            columnName[0] = "ID";
+            columnName[1] = "Product name";
+            columnName[2] = "Expiry";
+            columnName[3] = "Sell price";
+            columnName[4] = "Origin";
+            columnName[5] = "Quantity";
+            columnName[6] = "Product type";
+            defaultTableModel.setColumnIdentifiers(columnName);
+
+            String id, name, expiry, import_price,sell_price,quantity,product_type,origin;
+            while (resultSet.next()) {
+                id = resultSet.getString(1);
+                name =  resultSet.getString(2);
+                expiry = resultSet.getString(3);
+                sell_price = resultSet.getString(4);
+                origin = resultSet.getString(5);
+                quantity = resultSet.getString(6);
+                product_type = resultSet.getString(7);
+                String[] row = {id,name,expiry,sell_price,origin,quantity,product_type};
+                defaultTableModel.addRow(row);
+            }
+            //jButton1.setEnabled(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_formWindowActivated
   
     /**
      * @param args the command line arguments
@@ -450,9 +502,9 @@ public class storeUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;
+    private javax.swing.JButton RefreshButton;
     private javax.swing.JTextField SearchTextField;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
