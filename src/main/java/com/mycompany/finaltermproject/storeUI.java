@@ -186,6 +186,9 @@ public class storeUI extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 SearchTextFieldFocusGained(evt);
             }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                SearchTextFieldFocusLost(evt);
+            }
         });
         SearchTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -405,6 +408,10 @@ public class storeUI extends javax.swing.JFrame {
     private void SearchTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusGained
         SearchTextField.setText("");
     }//GEN-LAST:event_SearchTextFieldFocusGained
+
+    private void SearchTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusLost
+        SearchTextField.setText("Enter product's name");
+    }//GEN-LAST:event_SearchTextFieldFocusLost
   
     /**
      * @param args the command line arguments
