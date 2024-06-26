@@ -53,7 +53,7 @@ public class storeUI extends javax.swing.JFrame {
         jComboBox2 = new javax.swing.JComboBox<>();
         BackButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        SearchTextField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -180,8 +180,18 @@ public class storeUI extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        jTextField1.setText("Enter product's name");
+        SearchTextField.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        SearchTextField.setText("Enter product's name");
+        SearchTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                SearchTextFieldFocusGained(evt);
+            }
+        });
+        SearchTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SearchTextFieldActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Search");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -202,7 +212,7 @@ public class storeUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -218,7 +228,7 @@ public class storeUI extends javax.swing.JFrame {
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BackButton)
                     .addComponent(jButton2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
                 .addContainerGap())
         );
@@ -298,9 +308,17 @@ public class storeUI extends javax.swing.JFrame {
 
             int columnCount = resultSetMetaData.getColumnCount();
             String[] columnName = new String[columnCount];
-            for (int i = 0; i < columnCount; i++) {
+            /* for (int i = 0; i < columnCount; i++) {
                 columnName[i] = resultSetMetaData.getColumnName(i+1);
-            }
+            } */
+            columnName[0] = "ID";
+            columnName[1] = "Product name";
+            columnName[2] = "Expiry";
+            columnName[3] =  "Import price";
+            columnName[4] = "Sell price";
+            columnName[5] = "Origin";
+            columnName[6] = "Quantity";
+            columnName[7] = "Product type";
             defaultTableModel.setColumnIdentifiers(columnName);
 
             String id, name, expiry, import_price,sell_price,quantity,product_type,origin;
@@ -331,7 +349,7 @@ public class storeUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (jTextField1.getText().equals("Enter product's name")) {
+        if (SearchTextField.getText().equals("Enter product's name")) {
             JOptionPane.showMessageDialog(null, "Please enter product's name!");
         }
         try {
@@ -342,7 +360,7 @@ public class storeUI extends javax.swing.JFrame {
                             "WHERE pr.product_name LIKE ?";
 
             PreparedStatement pr = con.prepareStatement(query);
-            pr.setString(1, "%" + jTextField1.getText() + "%");
+            pr.setString(1, "%" + SearchTextField.getText() + "%");
             ResultSet resultSet = pr.executeQuery();
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
@@ -350,9 +368,17 @@ public class storeUI extends javax.swing.JFrame {
 
             int columnCount = resultSetMetaData.getColumnCount();
             String[] columnName = new String[columnCount];
-            for (int i = 0; i < columnCount; i++) {
+            /* for (int i = 0; i < columnCount; i++) {
                 columnName[i] = resultSetMetaData.getColumnName(i+1);
-            }
+            } */
+            columnName[0] = "ID";
+            columnName[1] = "Product name";
+            columnName[2] = "Expiry";
+            columnName[3] =  "Import price";
+            columnName[4] = "Sell price";
+            columnName[5] = "Origin";
+            columnName[6] = "Quantity";
+            columnName[7] = "Product type";
             defaultTableModel.setColumnIdentifiers(columnName);
 
             String id, name, expiry, import_price,sell_price,quantity,product_type,origin;
@@ -374,6 +400,14 @@ public class storeUI extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void SearchTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_SearchTextFieldActionPerformed
+
+    private void SearchTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusGained
+        SearchTextField.setText("");
+    }//GEN-LAST:event_SearchTextFieldFocusGained
   
     /**
      * @param args the command line arguments
@@ -412,6 +446,7 @@ public class storeUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;
+    private javax.swing.JTextField SearchTextField;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -429,7 +464,6 @@ public class storeUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
     private void updateTableData() {

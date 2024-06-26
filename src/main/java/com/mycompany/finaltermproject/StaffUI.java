@@ -174,10 +174,23 @@ public class StaffUI extends javax.swing.JFrame {
         });
 
         SearchTextField.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        SearchTextField.setText("Enter staff's name here");
+        SearchTextField.setText("Enter staff's name");
+        SearchTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                SearchTextFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                SearchTextFieldFocusLost(evt);
+            }
+        });
         SearchTextField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 SearchTextFieldMouseClicked(evt);
+            }
+        });
+        SearchTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SearchTextFieldActionPerformed(evt);
             }
         });
 
@@ -299,10 +312,11 @@ public class StaffUI extends javax.swing.JFrame {
 
             int columnCount = resultSetMetaData.getColumnCount();
             String[] columnName = new String[columnCount];
-            for (int i = 0; i < columnCount; i++) {
-                columnName[i] = resultSetMetaData.getColumnName(i+1);
-            }
-            defaultTableModel.setColumnIdentifiers(columnName);
+            columnName[0] = "ID";
+            columnName[1] = "Name";
+            columnName[2] = "Sex";
+            columnName[3] = "Date of birth";
+            columnName[4] = "Address";
 
             String id, name, sex, dob, address;
             while (resultSet.next()) {
@@ -311,7 +325,8 @@ public class StaffUI extends javax.swing.JFrame {
                 sex = resultSet.getString(3);
                 dob = resultSet.getString(4);
                 address = resultSet.getString(5);
-                
+                defaultTableModel.setColumnIdentifiers(columnName);
+
                 String[] row = {id,name,sex, dob, address};
                 defaultTableModel.addRow(row);
             }
@@ -338,9 +353,11 @@ public class StaffUI extends javax.swing.JFrame {
 
             int columnCount = resultSetMetaData.getColumnCount();
             String[] columnName = new String[columnCount];
-            for (int i = 0; i < columnCount; i++) {
-                columnName[i] = resultSetMetaData.getColumnName(i+1);
-            }
+            columnName[0] = "ID";
+            columnName[1] = "Name";
+            columnName[2] = "Sex";
+            columnName[3] =  "Date of birth";
+            columnName[4] = "Address";
             defaultTableModel.setColumnIdentifiers(columnName);
 
             String id, name, sex, dob, address;
@@ -361,8 +378,20 @@ public class StaffUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void SearchTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SearchTextFieldMouseClicked
-        SearchTextField.setText("");
+        
     }//GEN-LAST:event_SearchTextFieldMouseClicked
+
+    private void SearchTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_SearchTextFieldActionPerformed
+
+    private void SearchTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusLost
+        SearchTextField.setText("Enter staff's name");
+    }//GEN-LAST:event_SearchTextFieldFocusLost
+
+    private void SearchTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusGained
+        SearchTextField.setText("");
+    }//GEN-LAST:event_SearchTextFieldFocusGained
 
     /**
      * @param args the command line arguments

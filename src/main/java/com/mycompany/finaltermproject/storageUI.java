@@ -183,6 +183,9 @@ public class storageUI extends javax.swing.JFrame {
         SearchTextField.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         SearchTextField.setText("Enter product's name");
         SearchTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                SearchTextFieldFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 SearchTextFieldFocusLost(evt);
             }
@@ -190,6 +193,9 @@ public class storageUI extends javax.swing.JFrame {
         SearchTextField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 SearchTextFieldMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                SearchTextFieldMouseExited(evt);
             }
         });
         SearchTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -297,9 +303,14 @@ public class storageUI extends javax.swing.JFrame {
 
             int columnCount = resultSetMetaData.getColumnCount();
             String[] columnName = new String[columnCount];
-            for (int i = 0; i < columnCount; i++) {
-                columnName[i] = resultSetMetaData.getColumnName(i+1);
-            }
+            columnName[0] = "ID";
+            columnName[1] = "Product name";
+            columnName[2] = "Expiry";
+            columnName[3] =  "Import price";
+            columnName[4] = "Sell price";
+            columnName[5] = "Origin";
+            columnName[6] = "Quantity";
+            columnName[7] = "Product type";
             defaultTableModel.setColumnIdentifiers(columnName);
 
             String id, name, expiry, import_price,sell_price,quantity,product_type,origin;
@@ -341,9 +352,14 @@ public class storageUI extends javax.swing.JFrame {
 
             int columnCount = resultSetMetaData.getColumnCount();
             String[] columnName = new String[columnCount];
-            for (int i = 0; i < columnCount; i++) {
-                columnName[i] = resultSetMetaData.getColumnName(i+1);
-            }
+            columnName[0] = "ID";
+            columnName[1] = "Product name";
+            columnName[2] = "Expiry";
+            columnName[3] =  "Import price";
+            columnName[4] = "Sell price";
+            columnName[5] = "Origin";
+            columnName[6] = "Quantity";
+            columnName[7] = "Product type";
             defaultTableModel.setColumnIdentifiers(columnName);
 
             String id, name, expiry, import_price,sell_price,quantity,product_type,origin;
@@ -375,7 +391,7 @@ public class storageUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void SearchTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SearchTextFieldMouseClicked
-       SearchTextField.setText("");
+       
     }//GEN-LAST:event_SearchTextFieldMouseClicked
 
     private void SearchTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchTextFieldActionPerformed
@@ -385,6 +401,14 @@ public class storageUI extends javax.swing.JFrame {
     private void SearchTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusLost
         SearchTextField.setText("Enter product's name");
     }//GEN-LAST:event_SearchTextFieldFocusLost
+
+    private void SearchTextFieldMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SearchTextFieldMouseExited
+        
+    }//GEN-LAST:event_SearchTextFieldMouseExited
+
+    private void SearchTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusGained
+        SearchTextField.setText("");
+    }//GEN-LAST:event_SearchTextFieldFocusGained
 
     /**
      * @param args the command line arguments

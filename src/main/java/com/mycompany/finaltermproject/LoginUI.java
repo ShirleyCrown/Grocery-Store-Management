@@ -246,7 +246,7 @@ public class LoginUI extends javax.swing.JFrame {
                 main.setVisible(true);
                 this.dispose();
             }else{
-                JOptionPane.showMessageDialog(null, "Login Failed. Please Register");
+                JOptionPane.showMessageDialog(null, "Failed to login, please check your username/password");
             }
 
 
