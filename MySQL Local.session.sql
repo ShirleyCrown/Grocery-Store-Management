@@ -1,2 +1,2 @@
 use grocerystore;
-SELECT* FROM Staff;
+SELECT* FROM product;
