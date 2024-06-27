@@ -237,7 +237,10 @@ public class AddStaffUI extends javax.swing.JFrame {
             }else{
                 JOptionPane.showMessageDialog(null,"Please insert all data");
             }
-
+            PreparedStatement pr1 = con.prepareStatement("INSERT INTO ACCOUNT(USERNAME,PASSWORD) VALUE (?,?)");
+            pr1.setString(1, jTextField1.getText());
+            pr1.setString(2, jTextField1.getText());
+            pr1.executeUpdate();
             
         } catch(NullPointerException e){
             JOptionPane.showMessageDialog(null, "Please insert all data!");
