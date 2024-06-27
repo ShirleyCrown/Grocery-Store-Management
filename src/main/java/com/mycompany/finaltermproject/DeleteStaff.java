@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import javax.swing.JOptionPane;
 
@@ -206,8 +207,11 @@ public class DeleteStaff extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
-            PreparedStatement pr = con.prepareStatement("DELETE FROM STAFF WHERE ID = ?");
-            pr.setString(1, jTextField1.getText());
+            PreparedStatement pr = con.prepareStatement("UPDATE STAFF SET SALARY = NULL, END_DATE = ? WHERE ID = ?");
+            LocalDate now = LocalDate.now();
+            String today = now.toString();
+            pr.setString(1, today);
+            pr.setString(2, jTextField1.getText());
             pr.executeUpdate();
             JOptionPane.showMessageDialog(null, "Staff deleted!");
             jTextField1.setText(null);

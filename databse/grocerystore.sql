@@ -1,60 +1,36 @@
 CREATE DATABASE GROCERYSTORE;
 USE GROCERYSTORE;
 
--- Create the PRODUCT table
-CREATE TABLE PRODUCT(
-    id VARCHAR(10) PRIMARY KEY,
-    product_name VARCHAR(50),
-    expiry DATE,
-    import_price INT,
-    sell_price INT,
-    origin NVARCHAR(50),
-    quantity INT,
-    product_type VARCHAR(10)    
-);
-
 -- Create the PRODUCT_TYPE table
 CREATE TABLE PRODUCT_TYPE (
     id VARCHAR(10) PRIMARY KEY,
     type_name VARCHAR(50)
 );  
 
--- Create foreign key constraint for PRODUCT table
-ALTER TABLE PRODUCT ADD CONSTRAINT fk_product_type
-FOREIGN KEY (product_type) REFERENCES PRODUCT_TYPE(id);
+CREATE TABLE SUPPLIER (
+    id VARCHAR(10) PRIMARY KEY,
+    supplier_name VARCHAR(50),
+    address VARCHAR(100),
+    phone VARCHAR(15)
+);
+
+-- Create the PRODUCT table
+CREATE TABLE PRODUCT(
+    id VARCHAR(10) PRIMARY KEY,
+    product_name VARCHAR(50),
+    expiry DATE,
+    import_price INT,
+    sell_price INT GENERATED ALWAYS AS (import_price * 1.2) STORED,
+    origin NVARCHAR(50),
+    quantity INT,
+    product_type VARCHAR(10),
+    supplier_id VARCHAR(10),
+    CONSTRAINT fk_product_type FOREIGN KEY (product_type) REFERENCES PRODUCT_TYPE(id),
+    CONSTRAINT fk_supplier FOREIGN KEY (supplier_id) REFERENCES SUPPLIER(id)
+);
 
 -- Create the INCOME_DETAILS table
-CREATE TABLE INCOME_DETAILS(
-    product_id VARCHAR(10),
-    sold_quantity INT,
-    report_month INT,
-    PRIMARY KEY (product_id, report_month)
-);
 
--- Create the INCOME_REPORT table with computed income
-CREATE TABLE INCOME_REPORT(
-    report_month INT PRIMARY KEY,
-    income INT
-);
-
--- Create foreign key constraint for INCOME_DETAILS table
-ALTER TABLE INCOME_DETAILS ADD CONSTRAINT fk_product_id 
-FOREIGN KEY (product_id) REFERENCES PRODUCT(id);
-
--- Create the IMPORT_STATISTIC_SHEET table
-CREATE TABLE IMPORT_STATISTIC_SHEET (
-    id VARCHAR(10) PRIMARY KEY,
-    product_id VARCHAR(10),
-    price INT,
-    statistical_day DATE,
-    statistician VARCHAR(10)
-);
-
--- Create the ACCOUNT table
-CREATE TABLE ACCOUNT (
-    username VARCHAR(10) PRIMARY KEY,
-    password VARCHAR(50)
-);
 
 -- Create the STAFF table
 CREATE TABLE STAFF(
@@ -62,20 +38,29 @@ CREATE TABLE STAFF(
     name VARCHAR(50),
     sex ENUM('male', 'female'),
     dob DATE,
-    address VARCHAR(50)
+    address VARCHAR(50),
+    salary INT,
+    start_date DATE,
+    end_date DATE
 );
 
--- Create foreign key constraint for IMPORT_STATISTIC_SHEET table
-ALTER TABLE IMPORT_STATISTIC_SHEET ADD CONSTRAINT fk_product_id_1 
-FOREIGN KEY (product_id) REFERENCES PRODUCT(id);
+-- Create the IMPORT_STATISTIC_SHEET table
+CREATE TABLE IMPORT_STATISTIC_SHEET (
+    id VARCHAR(10) PRIMARY KEY,
+    product_id VARCHAR(10),
+    price INT,
+    statistical_day DATE,
+    statistician VARCHAR(10),
+    CONSTRAINT fk_product_id_1 FOREIGN KEY (product_id) REFERENCES PRODUCT(id),
+    CONSTRAINT fk_statistician_1 FOREIGN KEY (statistician) REFERENCES STAFF(id)
+);
 
--- Create foreign key constraint for IMPORT_STATISTIC_SHEET table for statistician
-ALTER TABLE IMPORT_STATISTIC_SHEET ADD CONSTRAINT fk_statistician_1
-FOREIGN KEY (statistician) REFERENCES STAFF(id);
-
--- Create foreign key constraint for ACCOUNT table
-ALTER TABLE ACCOUNT ADD CONSTRAINT fk_username
-FOREIGN KEY (username) REFERENCES STAFF(id);
+-- Create the ACCOUNT table
+CREATE TABLE ACCOUNT (
+    username VARCHAR(10) PRIMARY KEY,
+    password VARCHAR(50),
+    CONSTRAINT fk_username FOREIGN KEY (username) REFERENCES STAFF(id)
+);
 
 -- Insert data into PRODUCT_TYPE table
 INSERT INTO PRODUCT_TYPE (id, type_name) VALUES
@@ -85,39 +70,67 @@ INSERT INTO PRODUCT_TYPE (id, type_name) VALUES
 ('HPI', 'personal hygiene items'),
 ('HA', 'household appliances');
 
+INSERT INTO SUPPLIER (id, supplier_name, address, phone) VALUES
+('SUP001', 'Supplier One', '123 Supplier St', '123-456-7890'),
+('SUP002', 'Supplier Two', '456 Supplier Ave', '098-765-4321'),
+('SUP003', 'Supplier Three', '789 Supplier Blvd', '234-567-8901'),
+('SUP004', 'Supplier Four', '101 Supplier Rd', '345-678-9012'),
+('SUP005', 'Supplier Five', '202 Supplier Ln', '456-789-0123'),
+('SUP006', 'Supplier Six', '303 Supplier Dr', '567-890-1234'),
+('SUP007', 'Supplier Seven', '404 Supplier Ct', '678-901-2345'),
+('SUP008', 'Supplier Eight', '505 Supplier Pl', '789-012-3456'),
+('SUP009', 'Supplier Nine', '606 Supplier Way', '890-123-4567'),
+('SUP010', 'Supplier Ten', '707 Supplier Pkwy', '901-234-5678');
+
+CREATE TABLE INCOME_DETAILS(
+    product_id VARCHAR(10),
+    sold_quantity INT,
+    report_month INT,
+    PRIMARY KEY (product_id, report_month),
+    CONSTRAINT fk_product_id FOREIGN KEY (product_id) REFERENCES PRODUCT(id)
+);
+
+-- Create the INCOME_REPORT table with computed income and profit
+CREATE TABLE INCOME_REPORT(
+    report_month INT PRIMARY KEY,
+    income INT
+);
+
+
+
 -- Insert data into STAFF table
-INSERT INTO STAFF (id, name, sex, dob, address)
+INSERT INTO STAFF (id, name, sex, dob, address, salary, start_date, end_date)
 VALUES
-('S001', 'John Doe', 'male', '1990-05-15', '123 Main St, New York'),
-('S002', 'Jane Smith', 'female', '1992-08-20', '456 Oak Ave, Los Angeles'),
-('S003', 'Michael Johnson', 'male', '1985-03-10', '789 Elm Rd, Chicago'),
-('S004', 'Emily Brown', 'female', '1991-11-25', '567 Pine Blvd, Houston'),
-('S005', 'David Wilson', 'male', '1988-07-05', '890 Cedar Dr, San Francisco'),
-('S006', 'Jessica Martinez', 'female', '1993-02-18', '234 Maple Ln, Miami'),
-('S007', 'Christopher Garcia', 'male', '1987-09-30', '678 Birch Ave, Boston'),
-('S008', 'Sarah Lopez', 'female', '1990-04-12', '345 Oakwood St, Seattle'),
-('S009', 'Daniel Miller', 'male', '1986-01-08', '456 Pinecrest Rd, Denver'),
-('S010', 'Melissa Thompson', 'female', '1994-06-22', '789 Elmwood Dr, Atlanta'),
-('S011', 'Robert White', 'male', '1989-12-17', '567 Maplewood Ave, Dallas'),
-('S012', 'Amanda Scott', 'female', '1992-03-28', '123 Cedar Ln, Philadelphia'),
-('S013', 'William Lee', 'male', '1984-08-14', '890 Pine Rd, Phoenix'),
-('S014', 'Laura King', 'female', '1991-05-03', '234 Birch Ave, Detroit'),
-('S015', 'Richard Perez', 'male', '1987-10-19', '456 Elm St, Minneapolis'),
-('S016', 'Jennifer Harris', 'female', '1993-07-08', '678 Oak Ave, Baltimore'),
-('S017', 'Matthew Clark', 'male', '1985-02-11', '789 Maple Rd, Portland'),
-('S018', 'Michelle Lewis', 'female', '1990-09-26', '345 Pine Blvd, Las Vegas'),
-('S019', 'Joshua Robinson', 'male', '1986-04-30', '456 Cedar Dr, San Diego'),
-('S020', 'Kimberly Walker', 'female', '1994-01-15', '567 Oakwood Ln, Charlotte'),
-('S021', 'Jason Hall', 'male', '1989-06-18', '678 Maple Ave, Washington'),
-('S022', 'Stephanie Young', 'female', '1992-11-23', '123 Birch Rd, San Antonio'),
-('S023', 'Joseph Allen', 'male', '1984-07-04', '890 Elmwood St, Tampa'),
-('S024', 'Christina Green', 'female', '1991-04-09', '234 Pinecrest Rd, Nashville'),
-('S025', 'Daniel Baker', 'male', '1987-09-12', '456 Maplewood Ave, Honolulu'),
-('S026', 'Emily Hill', 'female', '1993-05-27', '789 Cedar Ln, Austin'),
-('S027', 'Kevin Adams', 'male', '1985-12-03', '890 Birch Ave, Orlando'),
-('S028', 'Rachel Ross', 'female', '1990-03-16', '345 Oak Rd, Denver'),
-('S029', 'Brandon Campbell', 'male', '1986-08-28', '456 Pine Ave, Chicago'),
-('admin', 'Alexis Price', 'female', '1994-02-01', '567 Elm Blvd, Miami');
+('S001', 'John Doe', 'male', '1990-05-15', '123 Main St, New York', NULL, '2021-01-01', NULL),
+('S002', 'Jane Smith', 'female', '1992-08-20', '456 Oak Ave, Los Angeles', NULL, '2021-02-01', NULL),
+('S003', 'Michael Johnson', 'male', '1985-03-10', '789 Elm Rd, Chicago', NULL, '2021-03-01', NULL),
+('S004', 'Emily Brown', 'female', '1991-11-25', '567 Pine Blvd, Houston', NULL, '2021-04-01', '2022-04-01'),
+('S005', 'David Wilson', 'male', '1988-07-05', '890 Cedar Dr, San Francisco', NULL, '2021-05-01', '2022-05-01'),
+('S006', 'Jessica Martinez', 'female', '1993-02-18', '234 Maple Ln, Miami', NULL, '2021-06-01', '2022-06-01'),
+('S007', 'Christopher Garcia', 'male', '1987-09-30', '678 Birch Ave, Boston', NULL, '2021-07-01', NULL),
+('S008', 'Sarah Lopez', 'female', '1990-04-12', '345 Oakwood St, Seattle', NULL, '2021-08-01', NULL),
+('S009', 'Daniel Miller', 'male', '1986-01-08', '456 Pinecrest Rd, Denver', NULL, '2021-09-01', NULL),
+('S010', 'Melissa Thompson', 'female', '1994-06-22', '789 Elmwood Dr, Atlanta', NULL, '2021-10-01', '2022-10-01'),
+('S011', 'Robert White', 'male', '1989-12-17', '567 Maplewood Ave, Dallas', NULL, '2021-11-01', '2022-11-01'),
+('S012', 'Amanda Scott', 'female', '1992-03-28', '123 Cedar Ln, Philadelphia', NULL, '2021-12-01', NULL),
+('S013', 'William Lee', 'male', '1984-08-14', '890 Pine Rd, Phoenix', NULL, '2022-01-01', NULL),
+('S014', 'Laura King', 'female', '1991-05-03', '234 Birch Ave, Detroit', NULL, '2022-02-01', NULL),
+('S015', 'Richard Perez', 'male', '1987-10-19', '456 Elm St, Minneapolis', NULL, '2022-03-01', NULL),
+('S016', 'Jennifer Harris', 'female', '1993-07-08', '678 Oak Ave, Baltimore', NULL, '2022-04-01', '2023-04-01'),
+('S017', 'Matthew Clark', 'male', '1985-02-11', '789 Maple Rd, Portland', NULL, '2022-05-01', NULL),
+('S018', 'Michelle Lewis', 'female', '1990-09-26', '345 Pine Blvd, Las Vegas', NULL, '2022-06-01', NULL),
+('S019', 'Joshua Robinson', 'male', '1986-04-30', '456 Cedar Dr, San Diego', NULL, '2022-07-01', NULL),
+('S020', 'Kimberly Walker', 'female', '1994-01-15', '567 Oakwood Ln, Charlotte', NULL, '2022-08-01', '2023-08-01'),
+('S021', 'Jason Hall', 'male', '1989-06-18', '678 Maple Ave, Washington', NULL, '2022-09-01', '2023-09-01'),
+('S022', 'Stephanie Young', 'female', '1992-11-23', '123 Birch Rd, San Antonio', NULL, '2022-10-01', NULL),
+('S023', 'Joseph Allen', 'male', '1984-07-04', '890 Elmwood St, Tampa', NULL, '2022-11-01', NULL),
+('S024', 'Christina Green', 'female', '1991-04-09', '234 Pinecrest Rd, Nashville', NULL, '2022-12-01', NULL),
+('S025', 'Daniel Baker', 'male', '1987-09-12', '456 Maplewood Ave, Honolulu', NULL, '2023-01-01', NULL),
+('S026', 'Emily Hill', 'female', '1993-05-27', '789 Cedar Ln, Austin', NULL, '2023-02-01', NULL),
+('S027', 'Kevin Adams', 'male', '1985-12-03', '890 Birch Ave, Orlando', NULL, '2023-03-01', NULL),
+('S028', 'Rachel Ross', 'female', '1990-03-16', '345 Oak Rd, Denver', NULL, '2023-04-01', '2024-04-01'),
+('S029', 'Brandon Campbell', 'male', '1986-08-28', '456 Pine Ave, Chicago', NULL, '2023-05-01', NULL),
+('admin', 'Alexis Price', 'female', '1994-02-01', '567 Elm Blvd, Miami', NULL, '2023-06-01', NULL);
 
 -- Insert data into ACCOUNT table
 INSERT INTO ACCOUNT (username, password)
@@ -154,38 +167,38 @@ VALUES
 ('admin', 'admin');
 
 -- Insert data into PRODUCT table
-INSERT INTO PRODUCT (id, product_name, expiry, import_price, sell_price, origin, quantity, product_type)
+INSERT INTO PRODUCT (id, product_name, expiry, import_price, origin, quantity, product_type,supplier_id)
 VALUES
-('P001', 'Rice', '2024-12-31', 5000, 7000, 'Vietnam', 100, 'Fo'),
-('P002', 'Coca Cola', '2024-08-31', 3000, 5000, 'USA', 200, 'Dr'),
-('P003', 'Black Pepper', '2023-06-30', 15000, 20000, 'India', 50, 'Sp'),
-('P004', 'Toothpaste', '2025-02-28', 8000, 12000, 'Germany', 0, 'HPI'),
-('P005', 'Washing Machine', NULL, 3000000, 3500000, 'China', 30, 'HA'),
-('P006', 'Chicken', '2024-06-30', 20000, 25000, 'Brazil', 150, 'Fo'),
-('P007', 'Orange Juice', '2024-09-30', 10000, 15000, 'Spain', 100, 'Dr'),
-('P008', 'Cinnamon', '2023-12-31', 12000, 18000, 'Sri Lanka', 40, 'Sp'),
-('P009', 'Shampoo', '2024-04-30', 9000, 13000, 'France', 70, 'HPI'),
-('P010', 'Refrigerator', NULL, 5000000, 6000000, 'South Korea', 20, 'HA'),
-('P011', 'Beef', '2024-05-31', 25000, 30000, 'Australia', 120, 'Fo'),
-('P012', 'Apple Juice', '2024-08-31', 12000, 18000, 'Italy', 80, 'Dr'),
-('P013', 'Turmeric', '2023-11-30', 18000, 25000, 'India', 60, 'Sp'),
-('P014', 'Soap', '2024-03-31', 7000, 10000, 'Germany', 0, 'HPI'),
-('P015', 'Microwave', NULL, 2000000, 2500000, 'Japan', 25, 'HA'),
-('P016', 'Pork', '2024-07-31', 22000, 28000, 'Vietnam', 110, 'Fo'),
-('P017', 'Grape Juice', '2024-10-31', 11000, 16000, 'USA', 0, 'Dr'),
-('P018', 'Garlic', '2023-10-31', 10000, 15000, 'China', 45, 'Sp'),
-('P019', 'Deodorant', '2024-06-30', 8500, 12000, 'France', 60, 'HPI'),
-('P020', 'Dishwasher', NULL, 4000000, 4800000, 'Germany', 15, 'HA'),
-('P021', 'Lamb', '2024-04-30', 28000, 35000, 'New Zealand', 80, 'Fo'),
-('P022', 'Lemonade', '2024-09-30', 9000, 14000, 'Brazil', 85, 'Dr'),
-('P023', 'Coriander', '2023-12-31', 13000, 20000, 'India', 0, 'Sp'),
-('P024', 'Conditioner', '2024-03-31', 9500, 14000, 'Italy', 75, 'HPI'),
-('P025', 'Oven', NULL, 3000000, 3800000, 'South Korea', 20, 'HA'),
-('P026', 'Fish', '2024-08-31', 18000, 23000, 'Norway', 95, 'Fo'),
-('P027', 'Mango Juice', '2024-11-30', 13000, 18000, 'India', 65, 'Dr'),
-('P028', 'Cardamom', '2023-09-30', 16000, 22000, 'Guatemala', 50, 'Sp'),
-('P029', 'Toilet Paper', '2024-05-31', 6000, 9000, 'Canada', 0, 'HPI'),
-('P030', 'TV', NULL, 6000000, 7000000, 'USA', 10, 'HA');
+('P001', 'Rice', '2024-12-31', 5000, 'Vietnam', 100, 'Fo','SUP001'),
+('P002', 'Milk', '2023-06-30', 20000, 'USA', 200, 'Dr','SUP002'),
+('P003', 'Salt', '2025-01-15', 1000,'India', 150, 'Sp','SUP003'),
+('P004', 'Shampoo', '2024-11-20', 30000, 'Japan', 80, 'HPI','SUP004'),
+('P005', 'Dish Soap', '2024-10-10', 25000, 'Germany', 60, 'HA','SUP005'),
+('P006', 'Chicken', '2024-06-30', 20000,  'Brazil', 150, 'Fo','SUP006'),
+('P007', 'Orange Juice', '2024-09-30', 10000,  'Spain', 100, 'Dr','SUP007'),
+('P008', 'Cinnamon', '2023-12-31', 12000,  'Sri Lanka', 40, 'Sp','SUP008'),
+('P009', 'Shampoo', '2024-04-30', 9000, 'France', 70, 'HPI','SUP009'),
+('P010', 'Refrigerator', NULL, 5000000,  'South Korea', 20, 'HA','SUP010'),
+('P011', 'Beef', '2024-05-31', 25000,  'Australia', 120, 'Fo','SUP001'),
+('P012', 'Apple Juice', '2024-08-31', 12000,  'Italy', 80, 'Dr','SUP002'),
+('P013', 'Turmeric', '2023-11-30', 18000, 'India', 60, 'Sp','SUP003'),
+('P014', 'Soap', '2024-03-31', 7000, 'Germany', 0, 'HPI','SUP004'),
+('P015', 'Microwave', NULL, 2000000,'Japan', 25, 'HA','SUP005'),
+('P016', 'Pork', '2024-07-31', 22000,  'Vietnam', 110, 'Fo','SUP006'),
+('P017', 'Grape Juice', '2024-10-31', 11000,  'USA', 0, 'Dr','SUP008'),
+('P018', 'Garlic', '2023-10-31', 10000, 'China', 45, 'Sp','SUP009'),
+('P019', 'Deodorant', '2024-06-30', 8500, 'France', 60, 'HPI','SUP010'),
+('P020', 'Dishwasher', NULL, 4000000,  'Germany', 15, 'HA','SUP007'),
+('P021', 'Lamb', '2024-04-30', 28000,  'New Zealand', 80, 'Fo','SUP001'),
+('P022', 'Lemonade', '2024-09-30', 9000, 'Brazil', 85, 'Dr','SUP002'),
+('P023', 'Coriander', '2023-12-31', 13000,  'India', 0, 'Sp','SUP003'),
+('P024', 'Conditioner', '2024-03-31', 9500,  'Italy', 75, 'HPI','SUP004'),
+('P025', 'Oven', NULL, 3000000,  'South Korea', 20, 'HA','SUP005'),
+('P026', 'Fish', '2024-08-31', 18000, 'Norway', 95, 'Fo','SUP006'),
+('P027', 'Mango Juice', '2024-11-30', 13000, 'India', 65, 'Dr','SUP008'),
+('P028', 'Cardamom', '2023-09-30', 16000, 'Guatemala', 50, 'Sp','SUP009'),
+('P029', 'Toilet Paper', '2024-05-31', 6000, 'Canada', 0, 'HPI','SUP010'),
+('P030', 'TV', NULL, 6000000, 'USA', 10, 'HA','SUP007');
 
 -- Insert data into INCOME_DETAILS table
 INSERT INTO INCOME_DETAILS (product_id, sold_quantity, report_month)
@@ -262,6 +275,47 @@ VALUES
 ('ISS029', 'P029', 90000, '2024-06-29', 'S029'),
 ('ISS030', 'P030', 7000000, '2024-06-30', 'admin');
 
+-- Create stored procedure to update salary based on start date
+/*DELIMITER $$
+CREATE PROCEDURE UpdateSalary()
+BEGIN
+    UPDATE STAFF
+    SET salary = 5000 + (YEAR(CURDATE()) - YEAR(start_date)) * 500
+    WHERE end_date IS NULL OR end_date >= CURDATE();
+END$$
+DELIMITER ;
+
+-- Create trigger to update salary before inserting or updating a record in STAFF
+DELIMITER $$
+CREATE TRIGGER BeforeInsertOrUpdateStaff
+BEFORE INSERT ON STAFF
+FOR EACH ROW
+BEGIN
+    SET NEW.salary = 5000 + (YEAR(CURDATE()) - YEAR(NEW.start_date)) * 500;
+END$$
+DELIMITER ;*/
+DELIMITER $$
+CREATE PROCEDURE UpdateSalary()
+BEGIN
+    UPDATE STAFF
+    SET salary = 5000 * POWER(1.05, DATEDIFF(CURDATE(), start_date) / 60)
+    WHERE end_date IS NULL OR end_date >= CURDATE();
+END$$
+DELIMITER ;
+
+-- Create trigger to update salary before inserting or updating a record in STAFF
+DELIMITER $$
+CREATE TRIGGER BeforeInsertOrUpdateStaff
+BEFORE INSERT ON STAFF
+FOR EACH ROW
+BEGIN
+    SET NEW.salary = 5000 * POWER(1.05, DATEDIFF(CURDATE(), NEW.start_date) / 60);
+END$$
+DELIMITER ;
+
+-- Call the stored procedure to update salary for existing records
+CALL UpdateSalary();
+
 INSERT INTO INCOME_REPORT (report_month, income)
 SELECT
     id.report_month,
@@ -272,3 +326,25 @@ JOIN
     PRODUCT p ON id.product_id = p.id
 GROUP BY
     id.report_month;
+    
+-- Create a VIEW to calculate profit
+CREATE VIEW INCOME_REPORT_VIEW AS
+SELECT
+    ir.report_month,
+    ir.income,
+    (ir.income - IFNULL(SUM(id.sold_quantity * p.import_price), 0)) AS profit
+FROM
+    INCOME_REPORT ir
+    LEFT JOIN INCOME_DETAILS id ON ir.report_month = id.report_month
+    LEFT JOIN PRODUCT p ON id.product_id = p.id
+GROUP BY
+    ir.report_month, ir.income;
+    
+
+
+
+    
+
+
+
+

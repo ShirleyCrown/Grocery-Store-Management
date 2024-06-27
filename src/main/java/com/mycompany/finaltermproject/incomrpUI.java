@@ -250,7 +250,8 @@ public class incomrpUI extends javax.swing.JFrame {
         try {
             //Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
-            String query =  "SELECT * FROM INCOME_REPORT";
+            String query =  "SELECT report_month, income, profit\n" + 
+                                "FROM INCOME_REPORT_VIEW;";
 
             PreparedStatement pr = con.prepareStatement(query);
             ResultSet resultSet = pr.executeQuery();
@@ -262,9 +263,10 @@ public class incomrpUI extends javax.swing.JFrame {
             String[] columnName = new String[columnCount];
             columnName[0] = "Month";
             columnName[1] = "Total income";
+            columnName[2] = "Profit";
             defaultTableModel.setColumnIdentifiers(columnName);
 
-            String month, income;
+            String month, income,profit;
             while (resultSet.next()) {
                 month = resultSet.getString(1);
                 switch (month) {
@@ -308,7 +310,8 @@ public class incomrpUI extends javax.swing.JFrame {
                         break;
                 }
                 income =  resultSet.getString(2);
-                String[] row = {month,income};
+                profit = resultSet.getString(3);
+                String[] row = {month,income,profit};
                 defaultTableModel.addRow(row);
             }
         } catch (SQLException e) {
@@ -445,7 +448,8 @@ public class incomrpUI extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
-            String query =  "SELECT * FROM INCOME_REPORT";
+            String query =  "SELECT report_month, income, profit\n" + 
+                                "FROM INCOME_REPORT_VIEW;";
 
             PreparedStatement pr = con.prepareStatement(query);
             ResultSet resultSet = pr.executeQuery();
@@ -457,9 +461,10 @@ public class incomrpUI extends javax.swing.JFrame {
             String[] columnName = new String[columnCount];
             columnName[0] = "Month";
             columnName[1] = "Total income";
+            columnName[2] = "Profit";
             defaultTableModel.setColumnIdentifiers(columnName);
 
-            String month, income;
+            String month, income,profit;
             while (resultSet.next()) {
                 month = resultSet.getString(1);
                 switch (month) {
@@ -503,7 +508,8 @@ public class incomrpUI extends javax.swing.JFrame {
                         break;
                 }
                 income =  resultSet.getString(2);
-                String[] row = {month,income};
+                profit = resultSet.getString(3);
+                String[] row = {month,income,profit};
                 defaultTableModel.addRow(row);
             }
         } catch (SQLException e) {

@@ -10,6 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Currency;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -199,7 +202,7 @@ public class AddStaffUI extends javax.swing.JFrame {
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
             //PreparedStatement pr = con.prepareStatement("INSERT INTO LOGIN (USERNAME,PASSWORD,SEX,MOBILE_NUMBER) VALUE (?,?,?,?)");
-            PreparedStatement pr = con.prepareStatement("INSERT INTO STAFF (ID,NAME,SEX,DOB,ADDRESS) VALUE (?,?,?,?,?)");
+            PreparedStatement pr = con.prepareStatement("INSERT INTO STAFF (ID,NAME,SEX,DOB,ADDRESS,START_DATE) VALUE (?,?,?,?,?,?)");
 
             if (!jTextField1.getText().isEmpty() && !jTextField2.getText().isEmpty() && !jDateChooser1.getDate().equals("") ) {
                 // Kiem tra check box
@@ -232,6 +235,9 @@ public class AddStaffUI extends javax.swing.JFrame {
                 String format = dateFormat.format(jDateChooser1.getDate());
                 pr.setString(4, format); 
                 pr.setString(5, jTextArea1.getText());
+                LocalDate today = LocalDate.now();
+                String todayString = today.toString();
+                pr.setString(6, todayString);
                 pr.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Register Successfully");
             }else{

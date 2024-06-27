@@ -360,18 +360,25 @@ public class StaffUI extends javax.swing.JFrame {
             columnName[0] = "ID";
             columnName[1] = "Name";
             columnName[2] = "Sex";
-            columnName[3] =  "Date of birth";
+            columnName[3] = "Date of birth";
             columnName[4] = "Address";
-            defaultTableModel.setColumnIdentifiers(columnName);
+            columnName[5] = "Salary";
+            columnName[6] = "Start date";
+            columnName[7] = "End date";
 
-            String id, name, sex, dob, address;
+            String id, name, sex, dob, address,salary,start,end;
             while (resultSet.next()) {
                 id = resultSet.getString(1);
                 name =  resultSet.getString(2);
                 sex = resultSet.getString(3);
                 dob = resultSet.getString(4);
                 address = resultSet.getString(5);
-                String[] row = {id,name,sex, dob, address};
+                salary = resultSet.getString(6);
+                start = resultSet.getString(7);
+                end = resultSet.getString(8);
+                defaultTableModel.setColumnIdentifiers(columnName);
+
+                String[] row = {id,name,sex, dob, address,salary,start,end};
                 defaultTableModel.addRow(row);
             }
 
@@ -402,7 +409,7 @@ public class StaffUI extends javax.swing.JFrame {
         try {
             //Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
-            String query =  "SELECT* FROM STAFF";
+            String query =  "SELECT ID,NAME,SEX,DOB,ADDRESS,SALARY,START_DATE FROM STAFF WHERE END_DATE IS NULL";
 
             java.sql.Statement st = con.createStatement();
             ResultSet resultSet = st.executeQuery(query);
@@ -417,17 +424,21 @@ public class StaffUI extends javax.swing.JFrame {
             columnName[2] = "Sex";
             columnName[3] = "Date of birth";
             columnName[4] = "Address";
+            columnName[5] = "Salary";
+            columnName[6] = "Start date";
 
-            String id, name, sex, dob, address;
+            String id, name, sex, dob, address,salary,start;
             while (resultSet.next()) {
                 id = resultSet.getString(1);
                 name =  resultSet.getString(2);
                 sex = resultSet.getString(3);
                 dob = resultSet.getString(4);
                 address = resultSet.getString(5);
+                salary = resultSet.getString(6);
+                start = resultSet.getString(7);
                 defaultTableModel.setColumnIdentifiers(columnName);
 
-                String[] row = {id,name,sex, dob, address};
+                String[] row = {id,name,sex, dob, address,salary,start};
                 defaultTableModel.addRow(row);
             }
             //jButton1.setEnabled(false);

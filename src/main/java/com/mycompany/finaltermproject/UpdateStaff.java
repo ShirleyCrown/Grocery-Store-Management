@@ -282,7 +282,6 @@ public class UpdateStaff extends javax.swing.JFrame {
                 }
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String format = dateFormat.format(jDateChooser1.getDate());
-                System.out.println(format);
                 pr.setString(3, format); 
                 pr.setString(4, jTextArea1.getText());
                 pr.setString(5, jTextField1.getText());

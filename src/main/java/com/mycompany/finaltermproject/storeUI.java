@@ -530,11 +530,12 @@ public class storeUI extends javax.swing.JFrame {
     
         StringBuilder query = new StringBuilder("SELECT pr.id, pr.product_name, pr.expiry, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
                                                 "FROM PRODUCT pr " +
-                                                "JOIN product_type pt ON pr.product_type = pt.id");
+                                                "JOIN product_type pt ON pr.product_type = pt.id " + 
+                                                "WHERE pr.quantity > 0");
     
         boolean hasFilter = !filterOption.equals("Filter by type");
         if (hasFilter) {
-            query.append(" WHERE pt.type_name = ? AND pr.quantity > 0");
+            query.append(" AND pt.type_name = ? ");
         }
     
         switch (sortOption) {
