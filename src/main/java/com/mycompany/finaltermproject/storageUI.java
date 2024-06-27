@@ -349,7 +349,7 @@ public class storageUI extends javax.swing.JFrame {
     }//GEN-LAST:event_RefreshButtonActionPerformed
 
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
-        if (SearchTextField.getText().equals("Enter product's name")) {
+        if (SearchTextField.getText().equals("Enter product's name") || SearchTextField.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Please enter product's name!");
         }
         try {
@@ -415,7 +415,8 @@ public class storageUI extends javax.swing.JFrame {
     }//GEN-LAST:event_SearchTextFieldActionPerformed
 
     private void SearchTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusLost
-        SearchTextField.setText("Enter product's name");
+        if (SearchTextField.getText().equals(""))
+            SearchTextField.setText("Enter product's name");
     }//GEN-LAST:event_SearchTextFieldFocusLost
 
     private void SearchTextFieldMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SearchTextFieldMouseExited

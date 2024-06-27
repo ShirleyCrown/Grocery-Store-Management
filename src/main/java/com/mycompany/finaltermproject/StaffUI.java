@@ -341,7 +341,7 @@ public class StaffUI extends javax.swing.JFrame {
     }//GEN-LAST:event_RefreshButtonActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        if (SearchTextField.getText().equals("Enter staff's name")) {
+        if (SearchTextField.getText().equals("Enter staff's name") || SearchTextField.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Please enter staff's name!");
         }
         try {
@@ -390,7 +390,8 @@ public class StaffUI extends javax.swing.JFrame {
     }//GEN-LAST:event_SearchTextFieldActionPerformed
 
     private void SearchTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusLost
-        SearchTextField.setText("Enter staff's name");
+        if (SearchTextField.getText().equals(""))    
+            SearchTextField.setText("Enter staff's name");
     }//GEN-LAST:event_SearchTextFieldFocusLost
 
     private void SearchTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusGained

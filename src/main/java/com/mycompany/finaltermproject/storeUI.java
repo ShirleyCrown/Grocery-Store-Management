@@ -356,7 +356,7 @@ public class storeUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (SearchTextField.getText().equals("Enter product's name")) {
+        if (SearchTextField.getText().equals("Enter product's name") || SearchTextField.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Please enter product's name!");
         }
         try {
@@ -364,7 +364,7 @@ public class storeUI extends javax.swing.JFrame {
             String query = "SELECT pr.id, pr.product_name, pr.expiry, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
                             "FROM PRODUCT pr " +
                             "JOIN product_type pt ON pr.product_type = pt.id " +
-                            "WHERE pr.product_name LIKE ? AND pr.expiry > 0";
+                            "WHERE pr.product_name LIKE ? AND pr.quantity > 0";
 
             PreparedStatement pr = con.prepareStatement(query);
             pr.setString(1, "%" + SearchTextField.getText() + "%");
@@ -415,7 +415,8 @@ public class storeUI extends javax.swing.JFrame {
     }//GEN-LAST:event_SearchTextFieldFocusGained
 
     private void SearchTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchTextFieldFocusLost
-        SearchTextField.setText("Enter product's name");
+        if (SearchTextField.getText().equals(""))
+            SearchTextField.setText("Enter product's name");
     }//GEN-LAST:event_SearchTextFieldFocusLost
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
@@ -533,7 +534,7 @@ public class storeUI extends javax.swing.JFrame {
     
         boolean hasFilter = !filterOption.equals("Filter by type");
         if (hasFilter) {
-            query.append(" WHERE pt.type_name = ?");
+            query.append(" WHERE pt.type_name = ? AND pr.quantity > 0");
         }
     
         switch (sortOption) {
