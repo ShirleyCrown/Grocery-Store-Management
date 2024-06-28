@@ -55,8 +55,10 @@ public class storeUI extends javax.swing.JFrame {
         RefreshButton = new javax.swing.JButton();
         SearchTextField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Grocery Store");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
@@ -117,7 +119,7 @@ public class storeUI extends javax.swing.JFrame {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/bag-handle.png"))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel1.setText("STORE");
+        jLabel1.setText("INVENTORY");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -127,7 +129,7 @@ public class storeUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -208,6 +210,13 @@ public class storeUI extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("Adjust");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -215,9 +224,11 @@ public class storeUI extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(BackButton)
-                .addGap(41, 41, 41)
+                .addGap(26, 26, 26)
                 .addComponent(RefreshButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
+                .addGap(26, 26, 26)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -237,7 +248,8 @@ public class storeUI extends javax.swing.JFrame {
                     .addComponent(BackButton)
                     .addComponent(RefreshButton)
                     .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap())
         );
 
@@ -304,10 +316,20 @@ public class storeUI extends javax.swing.JFrame {
         try {
             //Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
-            String query =  "SELECT pr.id, pr.product_name, pr.expiry ,pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
-                            "FROM PRODUCT pr " +
-                            "JOIN product_type pt ON pr.product_type = pt.id " + 
-                            "WHERE pr.quantity > 0";
+            String query =  "SELECT \n" + //
+                                "    p.id, \n" + //
+                                "    p.product_name, \n" + //
+                                "    p.expiry, \n" + //
+                                "    p.sell_price, \n" + //
+                                "    p.origin, \n" + //
+                                "    s.quantity, \n" + //
+                                "    pt.type_name\n" + //
+                                "FROM \n" + //
+                                "    PRODUCT p\n" + //
+                                "JOIN \n" + //
+                                "    STORE s ON p.id = s.product_id\n" + //
+                                "JOIN \n" + //
+                                "    PRODUCT_TYPE pt ON p.product_type = pt.id;";
 
             PreparedStatement pr = con.prepareStatement(query);
             ResultSet resultSet = pr.executeQuery();
@@ -361,10 +383,21 @@ public class storeUI extends javax.swing.JFrame {
         }
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
-            String query = "SELECT pr.id, pr.product_name, pr.expiry, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
-                            "FROM PRODUCT pr " +
-                            "JOIN product_type pt ON pr.product_type = pt.id " +
-                            "WHERE pr.product_name LIKE ? AND pr.quantity > 0";
+            String query = "SELECT \n" + //
+                                "    p.id, \n" + //
+                                "    p.product_name, \n" + //
+                                "    p.expiry, \n" + //
+                                "    p.sell_price, \n" + //
+                                "    p.origin, \n" + //
+                                "    s.quantity, \n" + //
+                                "    pt.type_name\n" + //
+                                "FROM \n" + //
+                                "    PRODUCT p\n" + //
+                                "JOIN \n" + //
+                                "    STORE s ON p.id = s.product_id\n" + //
+                                "JOIN \n" + //
+                                "    PRODUCT_TYPE pt ON p.product_type = pt.id\n" + 
+                                "WHERE p.product_name LIKE ?";
 
             PreparedStatement pr = con.prepareStatement(query);
             pr.setString(1, "%" + SearchTextField.getText() + "%");
@@ -423,10 +456,20 @@ public class storeUI extends javax.swing.JFrame {
         try {
             //Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
-            String query =  "SELECT pr.id, pr.product_name, pr.expiry ,pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
-                            "FROM PRODUCT pr " +
-                            "JOIN product_type pt ON pr.product_type = pt.id " + 
-                            "WHERE pr.quantity > 0";
+            String query =  "SELECT \n" + //
+                                "    p.id, \n" + //
+                                "    p.product_name, \n" + //
+                                "    p.expiry, \n" + //
+                                "    p.sell_price, \n" + //
+                                "    p.origin, \n" + //
+                                "    s.quantity, \n" + //
+                                "    pt.type_name\n" + //
+                                "FROM \n" + //
+                                "    PRODUCT p\n" + //
+                                "JOIN \n" + //
+                                "    STORE s ON p.id = s.product_id\n" + //
+                                "JOIN \n" + //
+                                "    PRODUCT_TYPE pt ON p.product_type = pt.id;";
 
             PreparedStatement pr = con.prepareStatement(query);
             ResultSet resultSet = pr.executeQuery();
@@ -465,6 +508,13 @@ public class storeUI extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }//GEN-LAST:event_formWindowActivated
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        EditStore editStore = new EditStore();
+        editStore.setLocationRelativeTo(null);
+        editStore.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
   
     /**
      * @param args the command line arguments
@@ -506,6 +556,7 @@ public class storeUI extends javax.swing.JFrame {
     private javax.swing.JButton RefreshButton;
     private javax.swing.JTextField SearchTextField;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
@@ -528,10 +579,20 @@ public class storeUI extends javax.swing.JFrame {
         String filterOption = (String) jComboBox2.getSelectedItem();
         //filterOption = filterOption.toLowerCase();
     
-        StringBuilder query = new StringBuilder("SELECT pr.id, pr.product_name, pr.expiry, pr.sell_price, pr.origin, pr.quantity, pt.type_name " +
-                                                "FROM PRODUCT pr " +
-                                                "JOIN product_type pt ON pr.product_type = pt.id " + 
-                                                "WHERE pr.quantity > 0");
+        StringBuilder query = new StringBuilder("SELECT \n" + //
+                        "    p.id, \n" + //
+                        "    p.product_name, \n" + //
+                        "    p.expiry, \n" + //
+                        "    p.sell_price, \n" + //
+                        "    p.origin, \n" + //
+                        "    s.quantity, \n" + //
+                        "    pt.type_name\n" + //
+                        "FROM \n" + //
+                        "    PRODUCT p\n" + //
+                        "JOIN \n" + //
+                        "    STORE s ON p.id = s.product_id\n" + //
+                        "JOIN \n" + //
+                        "    PRODUCT_TYPE pt ON p.product_type = pt.id ");
     
         boolean hasFilter = !filterOption.equals("Filter by type");
         if (hasFilter) {
@@ -540,16 +601,16 @@ public class storeUI extends javax.swing.JFrame {
     
         switch (sortOption) {
             case "Name: A to Z":
-                query.append(" ORDER BY pr.product_name ASC");
+                query.append(" ORDER BY p.product_name ASC");
                 break;
             case "Name: Z to A":
-                query.append(" ORDER BY pr.product_name DESC");
+                query.append(" ORDER BY p.product_name DESC");
                 break;
             case "Low to High Price":
-                query.append(" ORDER BY pr.sell_price ASC");
+                query.append(" ORDER BY p.sell_price ASC");
                 break;
             case "High to Low Price":
-                query.append(" ORDER BY pr.sell_price DESC");
+                query.append(" ORDER BY p.sell_price DESC");
                 break;
             default:
                 // No sorting

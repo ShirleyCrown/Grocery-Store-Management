@@ -56,6 +56,7 @@ public class AddStaffUI extends javax.swing.JFrame {
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Grocery Store");
         setPreferredSize(new java.awt.Dimension(380, 380));
         setResizable(false);
 

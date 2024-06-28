@@ -339,8 +339,58 @@ FROM
     LEFT JOIN PRODUCT p ON id.product_id = p.id
 GROUP BY
     ir.report_month, ir.income;
-    
 
+-- Create the STORE table
+CREATE TABLE STORE (
+    product_id VARCHAR(10),
+    quantity INT,
+    PRIMARY KEY (product_id),
+    CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES PRODUCT(id)
+);
+
+-- Create a trigger to check the quantity constraint before insert or update
+DELIMITER $$
+CREATE TRIGGER BeforeInsertOrUpdateStore
+BEFORE INSERT ON STORE
+FOR EACH ROW
+BEGIN
+    DECLARE product_quantity INT;
+    SELECT quantity INTO product_quantity FROM PRODUCT WHERE id = NEW.product_id;
+    IF NEW.quantity > product_quantity THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quantity exceeds available stock in PRODUCT table';
+    END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER BeforeUpdateStore
+BEFORE UPDATE ON STORE
+FOR EACH ROW
+BEGIN
+    DECLARE product_quantity INT;
+    SELECT quantity INTO product_quantity FROM PRODUCT WHERE id = NEW.product_id;
+    IF NEW.quantity > product_quantity THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quantity exceeds available stock in PRODUCT table';
+    END IF;
+END$$
+DELIMITER ;
+
+INSERT INTO STORE (product_id, quantity) VALUES
+('P001', 50),
+('P002', 150),
+('P003', 100),
+('P004', 50),
+('P005', 40),
+('P006', 100),
+('P007', 80),
+('P008', 30),
+('P009', 60),
+('P010', 10),
+('P011', 80),
+('P012', 60),
+('P013', 30),
+('P016', 10),
+('P015', 15);
 
 
     

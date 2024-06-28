@@ -57,6 +57,7 @@ public class UpdateStaff extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Grocery Store");
         setPreferredSize(new java.awt.Dimension(380, 380));
         setResizable(false);
 
@@ -259,7 +260,6 @@ public class UpdateStaff extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
-            //PreparedStatement pr = con.prepareStatement("INSERT INTO LOGIN (USERNAME,PASSWORD,SEX,MOBILE_NUMBER) VALUE (?,?,?,?)");
             PreparedStatement pr = con.prepareStatement("UPDATE STAFF SET NAME = ?, SEX = ?, DOB = ?, ADDRESS = ? WHERE ID = ?");
 
             if (!jTextField1.getText().isEmpty() && !jTextField2.getText().isEmpty() && !jDateChooser1.getDate().equals("") ) {
