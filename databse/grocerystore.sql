@@ -177,7 +177,7 @@ VALUES
 ('P006', 'Chicken', '2024-06-30', 20000,  'Brazil', 150, 'Fo','SUP006'),
 ('P007', 'Orange Juice', '2024-09-30', 10000,  'Spain', 100, 'Dr','SUP007'),
 ('P008', 'Cinnamon', '2023-12-31', 12000,  'Sri Lanka', 40, 'Sp','SUP008'),
-('P009', 'Shampoo', '2024-04-30', 9000, 'France', 70, 'HPI','SUP009'),
+('P009', 'Tooth Brush', '2024-04-30', 9000, 'France', 70, 'HPI','SUP009'),
 ('P010', 'Refrigerator', NULL, 5000000,  'South Korea', 20, 'HA','SUP010'),
 ('P011', 'Beef', '2024-05-31', 25000,  'Australia', 120, 'Fo','SUP001'),
 ('P012', 'Apple Juice', '2024-08-31', 12000,  'Italy', 80, 'Dr','SUP002'),

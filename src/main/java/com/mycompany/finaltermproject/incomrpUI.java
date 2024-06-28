@@ -51,6 +51,8 @@ public class incomrpUI extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jComboBox2 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -175,6 +177,15 @@ public class incomrpUI extends javax.swing.JFrame {
 
         jLabel1.setText("Choose month for details:");
 
+        jLabel4.setText("Best seller:");
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Choose criteria", "By quantity", "By income and profit" }));
+        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -182,8 +193,12 @@ public class incomrpUI extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(BackButton)
-                .addGap(53, 53, 53)
+                .addGap(42, 42, 42)
                 .addComponent(jButton1)
+                .addGap(83, 83, 83)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -198,7 +213,9 @@ public class incomrpUI extends javax.swing.JFrame {
                     .addComponent(BackButton)
                     .addComponent(jButton1)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel4)
+                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -517,6 +534,197 @@ public class incomrpUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+        try {
+            if (jComboBox2.getSelectedItem().equals("By quantity")) {
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+                String query =  "SELECT \n" + 
+                                        "    p.product_name,\n" + 
+                                        "    MAX(id.sold_quantity) AS sold_quantity,\n" + 
+                                        "    MAX(id.sold_quantity * p.sell_price) AS revenue,\n" + 
+                                        "    id.report_month\n" + 
+                                        "FROM \n" + 
+                                        "    INCOME_DETAILS id\n" + 
+                                        "JOIN \n" + 
+                                        "    PRODUCT p ON id.product_id = p.id\n" + 
+                                        "GROUP BY \n" + 
+                                        "    id.report_month, p.product_name\n" + 
+                                        "HAVING \n" + 
+                                        "    sold_quantity = (\n" + 
+                                        "        SELECT \n" + 
+                                        "            MAX(sold_quantity)\n" + 
+                                        "        FROM \n" +
+                                        "            INCOME_DETAILS id2\n" +
+                                        "        WHERE \n" + 
+                                        "            id2.report_month = id.report_month\n" + 
+                                        "    )\n" + 
+                                        "ORDER BY \n" + 
+                                        "    id.report_month;";
+    
+                PreparedStatement pr = con.prepareStatement(query);
+                ResultSet resultSet = pr.executeQuery();
+                java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+                DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+                defaultTableModel.setRowCount(0);
+    
+                int columnCount = resultSetMetaData.getColumnCount();
+                String[] columnName = new String[columnCount];
+                columnName[0] = "Product name";
+                columnName[1] = "Sold quantity";
+                columnName[2] = "Income";
+                columnName[3] =  "Month";
+                defaultTableModel.setColumnIdentifiers(columnName);
+    
+                String product_name,sold_quantity,income,month;
+                while (resultSet.next()) {
+                    product_name = resultSet.getString(1);
+                    sold_quantity =  resultSet.getString(2);
+                    income = resultSet.getString(3);
+                    month = resultSet.getString(4);
+                switch (month) {
+                    case "202301":
+                        month = "January";
+                        break;
+                    case "202302":
+                        month = "February";
+                        break;
+                    case "202303":
+                        month = "March";
+                        break;
+                    case "202304":
+                        month = "April";
+                        break;
+                    case "202305":
+                        month = "May";
+                        break;
+                    case "202306":
+                        month = "June";
+                        break;
+                    case "202307":
+                        month = "July";
+                        break;
+                    case "202308":
+                        month = "August";
+                        break;
+                    case "202309":
+                        month = "November";
+                        break;
+                    case "202310":
+                        month = "October";
+                        break;
+                    case "202311":
+                        month = "September";
+                        break;
+                    case "202312":
+                        month = "December";
+                        break;
+                    default:
+                        break;
+                }
+                    String[] row = {product_name,sold_quantity,income,month};
+                    defaultTableModel.addRow(row);
+                }
+                //jButton1.setEnabled(false);
+
+            } else if(jComboBox2.getSelectedItem().equals("By income and profit")){
+                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+                    String query =  "SELECT \n" + //
+                                                "    p.product_name,\n" + //
+                                                "    id.sold_quantity,\n" + //
+                                                "    id.sold_quantity * p.sell_price AS revenue,\n" + //
+                                                "    (id.sold_quantity * p.sell_price - id.sold_quantity * p.import_price) AS profit,\n" + //
+                                                "    id.report_month\n" + //
+                                                "FROM \n" + //
+                                                "    INCOME_DETAILS id\n" + //
+                                                "JOIN \n" + //
+                                                "    PRODUCT p ON id.product_id = p.id\n" + //
+                                                "WHERE \n" + //
+                                                "    (id.sold_quantity * p.sell_price) = (\n" + //
+                                                "        SELECT \n" + //
+                                                "            MAX(id2.sold_quantity * p2.sell_price)\n" + //
+                                                "        FROM \n" + //
+                                                "            INCOME_DETAILS id2\n" + //
+                                                "        JOIN \n" + //
+                                                "            PRODUCT p2 ON id2.product_id = p2.id\n" + //
+                                                "        WHERE \n" + //
+                                                "            id2.report_month = id.report_month\n" + //
+                                                "    )\n" + //
+                                                "ORDER BY \n" + //
+                                                "    id.report_month;";
+        
+                    PreparedStatement pr = con.prepareStatement(query);
+                    ResultSet resultSet = pr.executeQuery();
+                    java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+                    DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+                    defaultTableModel.setRowCount(0);
+        
+                    int columnCount = resultSetMetaData.getColumnCount();
+                    String[] columnName = new String[columnCount];
+                    columnName[0] = "Product name";
+                    columnName[1] = "Sold quantity";
+                    columnName[2] = "Income";
+                    columnName[3] = "Profit";
+                    columnName[4] =  "Month";
+                    defaultTableModel.setColumnIdentifiers(columnName);
+        
+                    String product_name,sold_quantity,income,profit,month;
+                    while (resultSet.next()) {
+                        product_name = resultSet.getString(1);
+                        sold_quantity =  resultSet.getString(2);
+                        income = resultSet.getString(3);
+                        profit = resultSet.getString(4);
+                        month = resultSet.getString(5);
+                        switch (month) {
+                            case "202301":
+                                month = "January";
+                                break;
+                            case "202302":
+                                month = "February";
+                                break;
+                            case "202303":
+                                month = "March";
+                                break;
+                            case "202304":
+                                month = "April";
+                                break;
+                            case "202305":
+                                month = "May";
+                                break;
+                            case "202306":
+                                month = "June";
+                                break;
+                            case "202307":
+                                month = "July";
+                                break;
+                            case "202308":
+                                month = "August";
+                                break;
+                            case "202309":
+                                month = "November";
+                                break;
+                            case "202310":
+                                month = "October";
+                                break;
+                            case "202311":
+                                month = "September";
+                                break;
+                            case "202312":
+                                month = "December";
+                                break;
+                            default:
+                                break;
+                        }
+                        String[] row = {product_name,sold_quantity,income,profit,month};
+                        defaultTableModel.addRow(row);
+                    }
+                }else{
+                    jButton1ActionPerformed(evt);
+                }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jComboBox2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -556,9 +764,11 @@ public class incomrpUI extends javax.swing.JFrame {
     private javax.swing.JButton BackButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;

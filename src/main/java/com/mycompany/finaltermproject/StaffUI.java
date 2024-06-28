@@ -51,10 +51,11 @@ public class StaffUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         BackButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         RefreshButton = new javax.swing.JButton();
         SearchTextField = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -146,7 +147,7 @@ public class StaffUI extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 641, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,13 +161,6 @@ public class StaffUI extends javax.swing.JFrame {
         BackButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BackButtonActionPerformed(evt);
-            }
-        });
-
-        jButton1.setText("Edit staff");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
             }
         });
 
@@ -205,22 +199,28 @@ public class StaffUI extends javax.swing.JFrame {
             }
         });
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Currently working", "Quitted", "All" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(BackButton)
-                .addGap(32, 32, 32)
+                .addGap(38, 38, 38)
                 .addComponent(RefreshButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(171, 171, 171)
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addGap(37, 37, 37))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -228,12 +228,19 @@ public class StaffUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BackButton)
-                    .addComponent(jButton1)
                     .addComponent(RefreshButton)
                     .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
+
+        jButton1.setText("Edit staff");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -243,7 +250,10 @@ public class StaffUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 888, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)))
                 .addContainerGap())
             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -251,9 +261,15 @@ public class StaffUI extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -304,9 +320,8 @@ public class StaffUI extends javax.swing.JFrame {
 
     private void RefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshButtonActionPerformed
         try {
-            //Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
-            String query =  "SELECT* FROM STAFF";
+            String query =  "SELECT ID,NAME,SEX,DOB,ADDRESS,SALARY,START_DATE FROM STAFF WHERE END_DATE IS NULL";
 
             java.sql.Statement st = con.createStatement();
             ResultSet resultSet = st.executeQuery(query);
@@ -321,20 +336,23 @@ public class StaffUI extends javax.swing.JFrame {
             columnName[2] = "Sex";
             columnName[3] = "Date of birth";
             columnName[4] = "Address";
+            columnName[5] = "Salary";
+            columnName[6] = "Start date";
 
-            String id, name, sex, dob, address;
+            String id, name, sex, dob, address,salary,start;
             while (resultSet.next()) {
                 id = resultSet.getString(1);
                 name =  resultSet.getString(2);
                 sex = resultSet.getString(3);
                 dob = resultSet.getString(4);
                 address = resultSet.getString(5);
+                salary = resultSet.getString(6);
+                start = resultSet.getString(7);
                 defaultTableModel.setColumnIdentifiers(columnName);
 
-                String[] row = {id,name,sex, dob, address};
+                String[] row = {id,name,sex, dob, address,salary,start};
                 defaultTableModel.addRow(row);
             }
-            //jButton1.setEnabled(false);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -447,6 +465,86 @@ public class StaffUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowActivated
 
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        try {
+            if (jComboBox1.getSelectedItem().equals("Quitted")) {
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+                String query =  "SELECT ID,NAME,SEX,DOB,ADDRESS,START_DATE,END_DATE FROM STAFF WHERE END_DATE IS NOT NULL";
+
+                java.sql.Statement st = con.createStatement();
+                ResultSet resultSet = st.executeQuery(query);
+                java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+                DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+                defaultTableModel.setRowCount(0);
+
+                int columnCount = resultSetMetaData.getColumnCount();
+                String[] columnName = new String[columnCount];
+                columnName[0] = "ID";
+                columnName[1] = "Name";
+                columnName[2] = "Sex";
+                columnName[3] = "Date of birth";
+                columnName[4] = "Address";
+                columnName[5] = "Start date";
+                columnName[6] = "End date";
+
+                String id, name, sex, dob, address,start,end;
+                while (resultSet.next()) {
+                    id = resultSet.getString(1);
+                    name =  resultSet.getString(2);
+                    sex = resultSet.getString(3);
+                    dob = resultSet.getString(4);
+                    address = resultSet.getString(5);
+                    start = resultSet.getString(6);
+                    end = resultSet.getString(7);
+                    defaultTableModel.setColumnIdentifiers(columnName);
+
+                    String[] row = {id,name,sex, dob, address,start,end};
+                    defaultTableModel.addRow(row);
+                }
+            } else if(jComboBox1.getSelectedItem().equals("All")){
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+                String query =  "SELECT ID,NAME,SEX,DOB,ADDRESS,SALARY,START_DATE,END_DATE FROM STAFF";
+
+                java.sql.Statement st = con.createStatement();
+                ResultSet resultSet = st.executeQuery(query);
+                java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+                DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+                defaultTableModel.setRowCount(0);
+
+                int columnCount = resultSetMetaData.getColumnCount();
+                String[] columnName = new String[columnCount];
+                columnName[0] = "ID";
+                columnName[1] = "Name";
+                columnName[2] = "Sex";
+                columnName[3] = "Date of birth";
+                columnName[4] = "Address";
+                columnName[5] = "Salary";
+                columnName[6] = "Start date";
+                columnName[7] = "End date";
+
+                String id, name, sex, dob, address,salary,start,end;
+                while (resultSet.next()) {
+                    id = resultSet.getString(1);
+                    name =  resultSet.getString(2);
+                    sex = resultSet.getString(3);
+                    dob = resultSet.getString(4);
+                    address = resultSet.getString(5);
+                    salary = resultSet.getString(6);
+                    start = resultSet.getString(7);
+                    end = resultSet.getString(8);
+                    defaultTableModel.setColumnIdentifiers(columnName);
+
+                    String[] row = {id,name,sex, dob, address,salary,start,end};
+                    defaultTableModel.addRow(row);
+                }
+            } else{
+                RefreshButtonActionPerformed(evt);
+            }
+        } catch (SQLException e) {
+            // TODO: handle exception
+        }
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -488,6 +586,7 @@ public class StaffUI extends javax.swing.JFrame {
     private javax.swing.JTextField SearchTextField;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel6;

@@ -219,7 +219,7 @@ public class AddStaffUI extends javax.swing.JFrame {
                 java.sql.Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery("SELECT ID FROM STAFF WHERE ID = '" + jTextField1.getText() + "'");
                 if (rs.next()) {
-                    JOptionPane.showMessageDialog(null, "Account exist. Please choose another username.");
+                    JOptionPane.showMessageDialog(null, "Staff exists.");
                     return;
                 }
 
@@ -239,7 +239,7 @@ public class AddStaffUI extends javax.swing.JFrame {
                 String todayString = today.toString();
                 pr.setString(6, todayString);
                 pr.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Register Successfully");
+                JOptionPane.showMessageDialog(null, "Add Staff Successfully");
             }else{
                 JOptionPane.showMessageDialog(null,"Please insert all data");
             }
