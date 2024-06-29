@@ -49,10 +49,10 @@ CREATE TABLE IMPORT_STATISTIC_SHEET (
     id VARCHAR(10) PRIMARY KEY,
     product_id VARCHAR(10),
     price INT,
-    statistical_day DATE,
-    statistician VARCHAR(10),
-    CONSTRAINT fk_product_id_1 FOREIGN KEY (product_id) REFERENCES PRODUCT(id),
-    CONSTRAINT fk_statistician_1 FOREIGN KEY (statistician) REFERENCES STAFF(id)
+    statistical_day DATE
+    -- statistician VARCHAR(10),
+    -- CONSTRAINT fk_product_id_1 FOREIGN KEY (product_id) REFERENCES PRODUCT(id)
+    -- CONSTRAINT fk_statistician_1 FOREIGN KEY (statistician) REFERENCES STAFF(id)
 );
 
 -- Create the ACCOUNT table
@@ -242,7 +242,7 @@ VALUES
 ('P007', 25, 202312);
 
 -- Insert data into IMPORT_STATISTIC_SHEET table
-INSERT INTO IMPORT_STATISTIC_SHEET (id, product_id, price, statistical_day, statistician)
+/*INSERT INTO IMPORT_STATISTIC_SHEET (id, product_id, price, statistical_day, statistician)
 VALUES
 ('ISS001', 'P001', 200000, '2024-06-01', 'S001'),
 ('ISS002', 'P002', 150000, '2024-06-02', 'S002'),
@@ -273,7 +273,7 @@ VALUES
 ('ISS027', 'P027', 120000, '2024-06-27', 'S027'),
 ('ISS028', 'P028', 160000, '2024-06-28', 'S028'),
 ('ISS029', 'P029', 90000, '2024-06-29', 'S029'),
-('ISS030', 'P030', 7000000, '2024-06-30', 'admin');
+('ISS030', 'P030', 7000000, '2024-06-30', 'admin');*/
 
 -- Create stored procedure to update salary based on start date
 /*DELIMITER $$

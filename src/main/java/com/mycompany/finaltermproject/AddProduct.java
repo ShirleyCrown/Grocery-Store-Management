@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 import javax.swing.JOptionPane;
 
@@ -42,7 +43,6 @@ public class AddProduct extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -52,7 +52,6 @@ public class AddProduct extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
@@ -81,7 +80,7 @@ public class AddProduct extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(418, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -104,9 +103,6 @@ public class AddProduct extends javax.swing.JFrame {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Import price:");
-
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel8.setText("Sell price:");
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Origin:");
@@ -143,8 +139,6 @@ public class AddProduct extends javax.swing.JFrame {
 
         jTextField3.setPreferredSize(new java.awt.Dimension(64, 25));
 
-        jTextField4.setPreferredSize(new java.awt.Dimension(64, 25));
-
         jTextField5.setPreferredSize(new java.awt.Dimension(70, 25));
 
         jTextField6.setPreferredSize(new java.awt.Dimension(64, 25));
@@ -178,32 +172,36 @@ public class AddProduct extends javax.swing.JFrame {
                         .addComponent(jButton3))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(106, 106, 106)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel9))
-                        .addGap(90, 90, 90)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1)
-                                .addGap(127, 127, 127)
-                                .addComponent(jButton2))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jButton4)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel11)
+                                    .addComponent(jLabel9))
+                                .addGap(90, 90, 90)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jButton1)
+                                        .addGap(127, 127, 127)
+                                        .addComponent(jButton2))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel7))
+                                .addGap(90, 90, 90)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButton4)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
+                                        .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))))
                 .addContainerGap(192, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -235,10 +233,6 @@ public class AddProduct extends javax.swing.JFrame {
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
@@ -253,7 +247,7 @@ public class AddProduct extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(99, Short.MAX_VALUE))
         );
 
         pack();
@@ -264,7 +258,6 @@ public class AddProduct extends javax.swing.JFrame {
         jTextField2.setText(null);
         jDateChooser1.setDate(null);
         jTextField3.setText(null);
-        jTextField4.setText(null);
         jTextField5.setText(null);
         jTextField6.setText(null);
         jComboBox1.setSelectedItem("Choose type");
@@ -274,9 +267,9 @@ public class AddProduct extends javax.swing.JFrame {
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
             //PreparedStatement pr = con.prepareStatement("INSERT INTO LOGIN (USERNAME,PASSWORD,SEX,MOBILE_NUMBER) VALUE (?,?,?,?)");
-            PreparedStatement pr = con.prepareStatement("INSERT INTO PRODUCT (ID,PRODUCT_NAME,EXPIRY,IMPORT_PRICE,SELL_PRICE,ORIGIN,QUANTITY,PRODUCT_TYPE) VALUE (?,?,?,?,?,?,?,?)");
+            PreparedStatement pr = con.prepareStatement("INSERT INTO PRODUCT (ID,PRODUCT_NAME,EXPIRY,IMPORT_PRICE,ORIGIN,QUANTITY,PRODUCT_TYPE) VALUE (?,?,?,?,?,?,?)");
 
-            if (!jTextField1.getText().isEmpty() && !jTextField2.getText().isEmpty()  && !jTextField3.getText().isEmpty() && !jTextField4.getText().isEmpty() && !jTextField5.getText().isEmpty() && !jTextField6.getText().isEmpty()) {
+            if (!jTextField1.getText().isEmpty() && !jTextField2.getText().isEmpty()  && !jTextField3.getText().isEmpty()  && !jTextField5.getText().isEmpty() && !jTextField6.getText().isEmpty()) {
                 // Kiem tra 
                 if (jDateChooser1.getDate().equals("")) {
                     JOptionPane.showMessageDialog(null,"Please choose expiry");
@@ -302,31 +295,40 @@ public class AddProduct extends javax.swing.JFrame {
                 String format = dateFormat.format(jDateChooser1.getDate());
                 pr.setString(3, format); 
                 pr.setString(4, jTextField3.getText());
-                pr.setString(5, jTextField4.getText());
-                pr.setString(6, jTextField5.getText());
-                pr.setString(7, jTextField6.getText());
+                pr.setString(5, jTextField5.getText());
+                pr.setString(6, jTextField6.getText());
+
                 String choice = (String) jComboBox1.getSelectedItem();
                 switch (choice) {
                     case "Foods":
-                        pr.setString(8, "Fo");
+                        pr.setString(7, "Fo");
                         break;
                     case "Drinks":
-                        pr.setString(8, "Dr");
+                        pr.setString(7, "Dr");
                         break;
                     case "Household appliances":
-                        pr.setString(8, "HA");
+                        pr.setString(7, "HA");
                         break;
                     case "Personal hygiene items":
-                        pr.setString(8, "HPI");
+                        pr.setString(7, "HPI");
                         break;
                     case "Spices":
-                        pr.setString(8, "Sp");
+                        pr.setString(7, "Sp");
                         break;
                     default:
                         break;
                 }
                 pr.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Add Product Successfully");
+                PreparedStatement pr1 = con.prepareStatement("INSERT INTO IMPORT_STATISTIC_SHEET (id, product_id, price, statistical_day) " + 
+                                                            "VALUES (?,?,?,?)");
+                pr1.setString(1, jTextField1.getText());
+                pr1.setString(2, jTextField2.getText());
+                pr1.setString(3, jTextField3.getText());
+                LocalDate today = LocalDate.now();
+                String todayString = today.toString();
+                pr1.setString(4, todayString);
+                pr1.executeUpdate();
             }else{
                 JOptionPane.showMessageDialog(null,"Please insert all data");
             }
@@ -405,13 +407,11 @@ public class AddProduct extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables

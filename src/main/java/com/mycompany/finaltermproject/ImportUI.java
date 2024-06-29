@@ -4,6 +4,14 @@
  */
 package com.mycompany.finaltermproject;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author letri
@@ -40,6 +48,11 @@ public class ImportUI extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel4.setBackground(new java.awt.Color(204, 204, 204));
         jPanel4.setPreferredSize(new java.awt.Dimension(900, 40));
@@ -177,8 +190,46 @@ public class ImportUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        storageUI storage = new storageUI();
+        storage.setLocation(this.getX(), this.getY());
+        storage.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        try{
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grocerystore", "root", "2704");
+            String query =  "SELECT *FROM IMPORT_STATISTIC_SHEET " ;
+
+            PreparedStatement pr = con.prepareStatement(query);
+            ResultSet resultSet = pr.executeQuery();
+            java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            defaultTableModel.setRowCount(0);
+
+            int columnCount = resultSetMetaData.getColumnCount();
+            String[] columnName = new String[columnCount];
+            columnName[0] = "ID";
+            columnName[1] = "Product ID";
+            columnName[2] = "Import price";
+            columnName[3] =  "Statistical day";
+
+            defaultTableModel.setColumnIdentifiers(columnName);
+
+            String id, name, expiry, import_price;
+            while (resultSet.next()) {
+                id = resultSet.getString(1);
+                name =  resultSet.getString(2);
+                expiry = resultSet.getString(3);
+                import_price = resultSet.getString(4);
+                String[] row = {id,name,expiry,import_price};
+                defaultTableModel.addRow(row);
+            }
+            //jButton1.setEnabled(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
